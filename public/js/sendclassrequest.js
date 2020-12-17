@@ -99,21 +99,54 @@ jQuery(document).ready(function () {
         }
     })
 
-    $('input[type="checkbox"]').change(function() {
+    $('.filter-parent input[type="checkbox"]').change(function() {
         var text = jQuery(this).parents('.filter-menu-list').data('name');
         var count = jQuery(this).parents('.filter-menu-list').find('input[type="checkbox"]:checked').length
         if(jQuery(this).parents('.filter-parent').hasClass('single')) {
             jQuery(this).parents('.filter-parent').find('input[type="checkbox"]:checked').prop( "checked", false )
             jQuery(this).prop( "checked", true )
             jQuery(this).parents('.filter-parent').find('.filter-notice').empty().html('Chọn ' + jQuery(this).val())
+            var key = jQuery(this).data('key')
+            jQuery.ajax({
+                type: "POST",
+                url: request_data.ajax_url,
+                data: {
+                    action: "get_districts_locations",
+                    province_key: key
+                },
+                dataType: "html",
+                beforeSend: function(){
+                    
+                },
+                success: function(response) {
+                    //Làm gì đó khi dữ liệu đã được xử lý
+                    jQuery('#filter-district .filter-menu-list').empty().html(response)
+                },
+                error: function( jqXHR, textStatus, errorThrown ){
+                    //Làm gì đó khi có lỗi xảy ra
+                    console.log( 'The following error occured: ' + textStatus, errorThrown );
+                }
+            });
+
         } else {
             if(count == 0) {
-                jQuery(this).parents('.filter-parent').find('.filter-notice').empty().html('Chọn ' + text)
+                jQuery(this).parents('.filter-parent').find('.filter-notice').empty().html('Chọn ' +text)
             }else{
                 jQuery(this).parents('.filter-parent').find('.filter-notice').empty().html('Đã chọn ' + count +' '+ text)
             }
         }
     });
+
+    // $('#filter-district input[type="checkbox"]').change(function() {
+    //     console.log(jQuery(this))
+    //     var text = jQuery(this).parents('.filter-menu-list').data('name');
+    //     var count = jQuery(this).parents('.filter-menu-list').find('input[type="checkbox"]:checked').length
+    //     if(count == 0) {
+    //         jQuery(this).parents('.filter-parent').find('.filter-notice').empty().html('Chọn ' + text)
+    //     }else{
+    //         jQuery(this).parents('.filter-parent').find('.filter-notice').empty().html('Đã chọn ' + count +' '+ text)
+    //     }
+    // });
 });
 
 // function submitFormFilter(el) {

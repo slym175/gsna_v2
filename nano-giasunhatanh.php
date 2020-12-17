@@ -83,6 +83,7 @@ if(!class_exists('GiaSuNhatAnh')) {
             // add_action( 'flatsome_before_blog' , 'get_flatsome_blog_breadcrumbs', 20 );
             // add_action( 'flatsome_before_page' , 'get_flatsome_blog_breadcrumbs', 20 );
             // add_action( 'flatsome_before_page_content' , 'get_flatsome_blog_breadcrumbs', 20 );
+            // add_filter( 'posts_where', 'title_filter', 10, 2 );
         }
 
         public static function init()
@@ -348,3 +349,16 @@ function get_flatsome_blog_breadcrumbs() {
         echo '</div></div></div></div>';
     }
 }
+
+// function title_filter($where, &$wp_query){
+//     global $wpdb;
+
+//     if($search_term = $wp_query->get( 'classroom_title' )){
+//         /*using the esc_like() in here instead of other esc_sql()*/
+//         $search_term = $wpdb->esc_like($search_term);
+//         $search_term = ' \'%' . $search_term . '%\'';
+//         $where .= ' AND ' . $wpdb->posts . '.post_title LIKE '.$search_term;
+//     }
+
+//     return $where;
+// }

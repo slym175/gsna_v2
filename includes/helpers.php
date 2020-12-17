@@ -1260,9 +1260,100 @@ function getSubjectNoParent()
     return $terms;
 }
 
-function get_class_locations()
+function get_provinces_locations()
 {
     $local = [];
+    $states = array(
+        'CHON-TINH-THANH' => 'Chọn tỉnh/thành phố',
+        'HA-NOI'          => 'Hà Nội',
+        'HO-CHI-MINH'     => 'Hồ Chí Minh',
+        'AN-GIANG'        => 'An Giang',
+        'BA-RIA-VUNG-TAU' => 'Bà Rịa Vũng Tàu',
+        'BAC-LIEU'        => 'Bạc Liêu',
+        'BAC-KAN'         => 'Bắc Kan',
+        'BAC-GIANG'       => 'Bắc Giang',
+        'BAC-NINH'        => 'Bắc Ninh',
+        'BEN-TRE'         => 'Bến Tre',
+        'BINH-DUONG'      => 'Bình Dương',
+        'BINH-DINH'       => 'Bình Định',
+        'BINH-PHUOC'      => 'Bình Phước',
+        'BINH-THUAN'      => 'Bình Thuận',
+        'CA-MAU'          => 'Cà Mau',
+        'CAO-BANG'        => 'Cao Bằng',
+        'CAN-THO'         => 'Cần Thơ',
+        'DA-NANG'         => 'Đà Nẵng',
+        'DAK-LAK'         => 'Dak Lak',
+        'DAK-NONG'        => 'Dak Nong',
+        'DONG-NAI'        => 'Đồng Nai',
+        'DONG-THAP'       => 'Đồng Tháp',
+        'DIEN-BIEN'       => 'Điện Biên',
+        'GIA-LAI'         => 'Gia Lai',
+        'HA-GIANG'        => 'Hà Giang',
+        'HA-NAM'          => 'Hà Nam',
+        'HA-TINH'         => 'Hà Tĩnh',
+        'HAI-DUONG'       => 'Hải Dương',
+        'HAI-PHONG'       => 'Hải Phòng',
+        'HOA-BINH'        => 'Hòa Bình',
+        'HAU-GIANG'       => 'Hậu Giang',
+        'HUNG-YEN'        => 'Hưng Yên',
+        'KHANH-HOA'       => 'Khánh Hòa',
+        'KIEN-GIANG'      => 'Kiên Giang',
+        'KON-TUM'         => 'Kon Tum',
+        'LAI-CHAU'        => 'Lai Châu',
+        'LAO-CAI'         => 'Lào Cai',
+        'LANG-SON'        => 'Lạng Sơn',
+        'LAM-DONG'        => 'Lâm Đồng',
+        'LONG-AN'         => 'Long An',
+        'NAM-DINH'        => 'Nam Định',
+        'NGHE-AN'         => 'Nghệ An',
+        'NINH-BINH'       => 'Ninh Bình',
+        'NINH-THUAN'      => 'Ninh Thuận',
+        'PHU-THO'         => 'Phú Thọ',
+        'PHU-YEN'         => 'Phú Yên',
+        'QUANG-BINH'      => 'Quảng Bình',
+        'QUANG-NAM'       => 'Quảng Nam',
+        'QUANG-NGAI'      => 'Quảng Ngãi',
+        'QUANG-NINH'      => 'Quảng Ninh',
+        'QUANG-TRI'       => 'Quảng Trị',
+        'SOC-TRANG'       => 'Sóc Trăng',
+        'SON-LA'          => 'Sơn La',
+        'TAY-NINH'        => 'Tây Ninh',
+        'THAI-BINH'       => 'Thái Bình',
+        'THAI-NGUYEN'     => 'Thái Nguyên',
+        'THANH-HOA'       => 'Thanh Hóa',
+        'THUA-THIEN-HUE'  => 'Thừa Thiên Huế',
+        'TIEN-GIANG'      => 'Tiền Giang',
+        'TRA-VINH'        => 'Trà Vinh',
+        'TUYEN-QUANG'     => 'Tuyên Quang',
+        'VINH-LONG'       => 'Vĩnh Long',
+        'VINH-PHUC'       => 'Vĩnh Phúc',
+        'YEN-BAI'         => 'Yên Bái',
+    );
+
+    $state_chosen = array_map(function($item) {
+        return rtrim(ltrim($item, " "), " ");
+    }, explode(';', get_option('gs_options')['class_province']));
+
+    foreach($states as $k => $s){
+        if(in_array($s, $state_chosen)) {
+            $provinces[$k] = $s;
+        }
+    }
+
+    $i = 0;
+    foreach ($provinces as $key => $state){
+        $local[$i]['key'] = $key;
+        $local[$i]['text'] = $state;
+        $i++;
+    }
+    return $local;
+}
+
+add_action( 'wp_ajax_get_districts_locations', 'get_districts_locations' );
+add_action( 'wp_ajax_nopriv_get_districts_locations', 'get_districts_locations' );
+function get_districts_locations()
+{
+    $pro_key = isset($_REQUEST['province_key']) ? $_REQUEST['province_key'] : 'CHON-TINH-THANH';
     $cities = array(
         'AN-GIANG'        => array(
             'Huyện An Phú',
@@ -2108,98 +2199,16 @@ function get_class_locations()
         ),
     );
 
-    $states = array(
-        'CHON-TINH-THANH' => 'Chọn tỉnh/thành phố',
-        'HA-NOI'          => 'Hà Nội',
-        'HO-CHI-MINH'     => 'Hồ Chí Minh',
-        'AN-GIANG'        => 'An Giang',
-        'BA-RIA-VUNG-TAU' => 'Bà Rịa Vũng Tàu',
-        'BAC-LIEU'        => 'Bạc Liêu',
-        'BAC-KAN'         => 'Bắc Kan',
-        'BAC-GIANG'       => 'Bắc Giang',
-        'BAC-NINH'        => 'Bắc Ninh',
-        'BEN-TRE'         => 'Bến Tre',
-        'BINH-DUONG'      => 'Bình Dương',
-        'BINH-DINH'       => 'Bình Định',
-        'BINH-PHUOC'      => 'Bình Phước',
-        'BINH-THUAN'      => 'Bình Thuận',
-        'CA-MAU'          => 'Cà Mau',
-        'CAO-BANG'        => 'Cao Bằng',
-        'CAN-THO'         => 'Cần Thơ',
-        'DA-NANG'         => 'Đà Nẵng',
-        'DAK-LAK'         => 'Dak Lak',
-        'DAK-NONG'        => 'Dak Nong',
-        'DONG-NAI'        => 'Đồng Nai',
-        'DONG-THAP'       => 'Đồng Tháp',
-        'DIEN-BIEN'       => 'Điện Biên',
-        'GIA-LAI'         => 'Gia Lai',
-        'HA-GIANG'        => 'Hà Giang',
-        'HA-NAM'          => 'Hà Nam',
-        'HA-TINH'         => 'Hà Tĩnh',
-        'HAI-DUONG'       => 'Hải Dương',
-        'HAI-PHONG'       => 'Hải Phòng',
-        'HOA-BINH'        => 'Hòa Bình',
-        'HAU-GIANG'       => 'Hậu Giang',
-        'HUNG-YEN'        => 'Hưng Yên',
-        'KHANH-HOA'       => 'Khánh Hòa',
-        'KIEN-GIANG'      => 'Kiên Giang',
-        'KON-TUM'         => 'Kon Tum',
-        'LAI-CHAU'        => 'Lai Châu',
-        'LAO-CAI'         => 'Lào Cai',
-        'LANG-SON'        => 'Lạng Sơn',
-        'LAM-DONG'        => 'Lâm Đồng',
-        'LONG-AN'         => 'Long An',
-        'NAM-DINH'        => 'Nam Định',
-        'NGHE-AN'         => 'Nghệ An',
-        'NINH-BINH'       => 'Ninh Bình',
-        'NINH-THUAN'      => 'Ninh Thuận',
-        'PHU-THO'         => 'Phú Thọ',
-        'PHU-YEN'         => 'Phú Yên',
-        'QUANG-BINH'      => 'Quảng Bình',
-        'QUANG-NAM'       => 'Quảng Nam',
-        'QUANG-NGAI'      => 'Quảng Ngãi',
-        'QUANG-NINH'      => 'Quảng Ninh',
-        'QUANG-TRI'       => 'Quảng Trị',
-        'SOC-TRANG'       => 'Sóc Trăng',
-        'SON-LA'          => 'Sơn La',
-        'TAY-NINH'        => 'Tây Ninh',
-        'THAI-BINH'       => 'Thái Bình',
-        'THAI-NGUYEN'     => 'Thái Nguyên',
-        'THANH-HOA'       => 'Thanh Hóa',
-        'THUA-THIEN-HUE'  => 'Thừa Thiên Huế',
-        'TIEN-GIANG'      => 'Tiền Giang',
-        'TRA-VINH'        => 'Trà Vinh',
-        'TUYEN-QUANG'     => 'Tuyên Quang',
-        'VINH-LONG'       => 'Vĩnh Long',
-        'VINH-PHUC'       => 'Vĩnh Phúc',
-        'YEN-BAI'         => 'Yên Bái',
-    );
-
-    $state_chosen = array_map(function($item) {
-        return rtrim(ltrim($item, " "), " ");
-    }, explode(';', get_option('gs_options')['class_province']));
-
-    foreach($states as $k => $s){
-        if(in_array($s, $state_chosen)) {
-            $provinces[$k] = $s;
-        }
+    foreach($cities[$pro_key] as $key => $district) {
+        ?>
+            <div>
+                <div class="form-check mb-2">
+                    <input type="checkbox" name="filter_district[]" value="<?= $district ?>" id="district<?= $key ?>">
+                    <label for="district<?= $key ?>" class="checkmark"><?= $district ?></label>
+                </div>
+            </div>
+        <?php
     }
 
-    $count_city = 1;
-    $count_district = 1;
-    foreach ($provinces as $key => $state){
-        $arr['text'] = $state;
-        $districts = $cities[$key];
-        foreach ($districts as $district){
-            $dis['text'] = $district;
-            $dist[] = $dis;
-            $count_district ++;
-        }
-        $arr['district'] = $dist;
-        $local[] = $arr;
-        $arr = [];
-        $dist = [];
-        $count_city ++;
-    }
-    return $local;
+    // die;
 }

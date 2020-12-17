@@ -12,13 +12,15 @@ $filter_province = isset($_REQUEST['filter_province']) && $_REQUEST['filter_prov
 $filter_district = isset($_REQUEST['filter_district']) && $_REQUEST['filter_district'] != "Chọn quận/huyện" ? $_REQUEST['filter_district'] : "";
 $filter_subject = isset($_REQUEST['filter_subject']) && $_REQUEST['filter_subject'] != "0" ? $_REQUEST['filter_subject'] : "";
 $filter_caphoc = isset($_REQUEST['filter_caphoc']) && $_REQUEST['filter_caphoc'] != "0" ? $_REQUEST['filter_caphoc'] : "";
-$filter_target = isset($_REQUEST['filter_target']) && $_REQUEST['filter_target'] != "0" ? $_REQUEST['filter_target'] : "";
+// $filter_target = isset($_REQUEST['filter_target']) && $_REQUEST['filter_target'] != "0" ? $_REQUEST['filter_target'] : "";
 $filter_formats = isset($_REQUEST['filter_formats']) && $_REQUEST['filter_formats'] != "0" ? $_REQUEST['filter_formats'] : "";
+
+$keywords = isset($_REQUEST['keywords']) ? $_REQUEST['keywords'] : "";
 
 // echo "Tinh";
 // print_r($filter_province );
 // echo "<br>Huyen";
-// print_r($filter_district );
+// print_r($filter_district);
 // echo "<br>Mon";
 // print_r($filter_subject );
 // echo "<br>Cap hoc";
@@ -28,76 +30,82 @@ $filter_formats = isset($_REQUEST['filter_formats']) && $_REQUEST['filter_format
 // echo "<br>Hinh thuc";
 // print_r($filter_formats );
 
-
-$args = array(
-    'post_type'         => 'classroom',
-    'paged'             => $paged,
-    'post_status'       => array('publish'),
-    'orderby'           => 'publish_date',
-    'order'             => 'DESC',
-    'posts_per_page'    => get_option( 'gs_options' )['classes_per_page'] ? get_option( 'gs_options' )['classes_per_page'] : 12,
-    'tax_query'         => array(
-        $filter_subject != "" ? 
-        array(
-            'taxonomy'  => 'class_subject',
-            'field'     => 'term_id',
-            'terms'     => intval($filter_subject),
-        ) : ''
-    ),
-    'meta_query'        => array(
-        'relation' => 'AND',
-        array(
-            'key'       => 'class_tutor',
-            'value'     => 0,
-            'compare'   => "=",
-        ),
-        array(
-            'relation'      => 'OR',
-            $filter_target != "" ? 
+if($keywords != "") {
+    $args = array(
+        'post_type'         => 'classroom',
+        'paged'             => $paged,
+        'post_status'       => array('publish'),
+        'orderby'           => 'publish_date',
+        'order'             => 'DESC',
+        'posts_per_page'    => get_option( 'gs_options' )['classes_per_page'] ? get_option( 'gs_options' )['classes_per_page'] : 12,
+        's'                 => $keywords
+    );
+} else {
+    $args = array(
+        'post_type'         => 'classroom',
+        'paged'             => $paged,
+        'post_status'       => array('publish'),
+        'orderby'           => 'publish_date',
+        'order'             => 'DESC',
+        'posts_per_page'    => get_option( 'gs_options' )['classes_per_page'] ? get_option( 'gs_options' )['classes_per_page'] : 12,
+        'tax_query'         => array(
+            $filter_subject != "" ? 
             array(
-                'key'       => 'class_target',
-                'value'     => $filter_target,
-                'compare'   => 'LIKE',
-            ) : '',
-            $filter_caphoc != "" ?
-            array(
-                'key'       => 'class_caphoc',
-                'value'     => $filter_caphoc,
-                'compare'   => 'LIKE',
-            ) : '',
-            $filter_province != "" ?
-            array(
-                'key'       => 'class_address',
-                'value'     => $filter_province,
-                'compare'   => 'LIKE',
-            ) : '',
-            $filter_district != "" ?
-            array(
-                'key'       => 'class_address',
-                'value'     => $filter_district,
-                'compare'   => 'LIKE',
-            ) : '',
-            $filter_formats != "" ?
-            array(
-                'key'       => 'class_format',
-                'value'     => $filter_formats,
-                'compare'   => 'LIKE',
+                'taxonomy'  => 'class_subject',
+                'field'     => 'term_id',
+                'terms'     => $filter_subject,
             ) : ''
+        ),
+        'meta_query'        => array(
+            'relation' => 'AND',
+            array(
+                'key'       => 'class_tutor',
+                'value'     => 0,
+                'compare'   => "=",
+            ),
+            array(
+                'relation'      => 'OR',
+                $filter_caphoc != "" ?
+                array(
+                    'key'       => 'class_caphoc',
+                    'value'     => $filter_caphoc,
+                    'compare'   => 'IN',
+                ) : '',
+                $filter_province != "" ?
+                array(
+                    'key'       => 'class_address',
+                    'value'     => $filter_province,
+                    'compare'   => 'LIKE',
+                ) : '',
+                $filter_district != "" ?
+                array(
+                    'key'       => 'class_address',
+                    'value'     => $filter_district,
+                    'compare'   => 'IN',
+                ) : '',
+                $filter_formats != "" ?
+                array(
+                    'key'       => 'class_format',
+                    'value'     => $filter_formats,
+                    'compare'   => 'IN',
+                ) : ''
+            )
         )
-    )
-);
+    );
+}
+
 
 $classrooms = new WP_Query($args);
 
 ?>
 
-
+<?php //echo "<pre>"; print_r($classrooms); echo "</pre>"; ?>
 
 <?php do_action( 'flatsome_before_blog' ); ?>
 
 <div class="classroom-section">
-    <div class="row breadcrumbs-section">
-        <div class="col">
+    <div class="row breadcrumbs-section row-grid row-small">
+        <div class="col small-12">
             <div class="breadcrumbs">
                 <?php
                     if ( function_exists('yoast_breadcrumb') ) {
@@ -108,8 +116,8 @@ $classrooms = new WP_Query($args);
         </div>
     </div>
 
-    <div class="row">
-        <div class="col">
+    <div class="row row-grid row-small">
+        <div class="col small-12">
             <form action="" method="GET" class="form-filter">
                 <input type="text" name="keywords" id="form-keywords">
                 <button class="submit-form" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
@@ -117,10 +125,10 @@ $classrooms = new WP_Query($args);
         </div>
     </div>
 
-    <div class="row">
-        <div class="col">
+    <div class="row filter-section row-grid row-small">
+        <div class="col small-12">
             <h5 class="text-primary"><i class="fa fa-filter" aria-hidden="true"></i> Bộ lọc</h5>
-            <form action="" method="POST" class="form-filter">
+            <form action="" method="GET" class="form-filter">
                 <!-- <select name="filter_subject" id="filter_subject">
 
                 </select>
@@ -141,7 +149,7 @@ $classrooms = new WP_Query($args);
                 </select> -->  
                 <?php 
                 // echo "<pre>";
-                // print_r(get_class_locations()); 
+                // print_r(get_provinces_locations()); 
                 // echo "</pre>";
                 ?>
 
@@ -164,18 +172,18 @@ $classrooms = new WP_Query($args);
                     </div>
                 </div>
 
-                <?php $privinces = get_class_locations(); ?>
+                <?php $provinces = get_provinces_locations(); ?>
                 <div class="filter-parent single">
                     <div class="filter-title">
                         <span class="filter-notice">Chọn tỉnh/thành</span>
                     </div>
                     <div class="filter-menu">
                         <div class="filter-menu-list" data-name="tỉnh/thành">
-                            <?php foreach($privinces as $key => $privince) : ?>
+                            <?php foreach($provinces as $key => $province) : ?>
                                 <div>
                                     <div class="form-check mb-2">
-                                        <input type="checkbox" name="filter_province" value="<?= $privince['text'] ?>" id="province<?= $key ?>">
-                                        <label for="province<?= $key ?>" class="checkmark"><?= $privince['text'] ?></label>
+                                        <input type="checkbox" data-key="<?= $province['key'] ?>" name="filter_province" value="<?= $province['text'] ?>" id="province<?= $key ?>">
+                                        <label for="province<?= $key ?>" class="checkmark"><?= $province['text'] ?></label>
                                     </div>
                                 </div>
                             <?php endforeach ?>
@@ -183,13 +191,55 @@ $classrooms = new WP_Query($args);
                     </div>
                 </div>
 
-                <div class="filter-parent">
+                <div class="filter-parent" id="filter-district">
                     <div class="filter-title">
                         <span class="filter-notice">Chọn quận/huyện</span>
                     </div>
                     <div class="filter-menu">
                         <div class="filter-menu-list" data-name="quận/huyện">
                             
+                        </div>
+                    </div>
+                </div>
+
+                <?php $caphocs = array_map(function($item) {
+                        return rtrim(ltrim($item, " "), " ");
+                    }, explode(';', get_option('gs_options')['class_caphoc'])); ?>
+                <div class="filter-parent">
+                    <div class="filter-title">
+                        <span class="filter-notice">Chọn cấp học</span>
+                    </div>
+                    <div class="filter-menu">
+                        <div class="filter-menu-list" data-name="cấp học">
+                            <?php foreach($caphocs as $key => $caphoc) : ?>
+                                <div>
+                                    <div class="form-check mb-2">
+                                        <input type="checkbox" name="filter_caphoc[]" value="<?= $caphoc ?>" id="caphoc<?= $key ?>">
+                                        <label for="caphoc<?= $key ?>" class="checkmark"><?= $caphoc ?></label>
+                                    </div>
+                                </div>
+                            <?php endforeach ?>
+                        </div>
+                    </div>
+                </div>
+
+                <?php $formats = array_map(function($item) {
+                        return rtrim(ltrim($item, " "), " ");
+                    }, explode(';', get_option('gs_options')['tutor_formats'])); ?>
+                <div class="filter-parent">
+                    <div class="filter-title">
+                        <span class="filter-notice">Chọn hình thức học</span>
+                    </div>
+                    <div class="filter-menu">
+                        <div class="filter-menu-list" data-name="hình thức học">
+                            <?php foreach($formats as $key => $format) : ?>
+                                <div>
+                                    <div class="form-check mb-2">
+                                        <input type="checkbox" name="filter_formats[]" value="<?= $format ?>" id="format<?= $key ?>">
+                                        <label for="format<?= $key ?>" class="checkmark"><?= $format ?></label>
+                                    </div>
+                                </div>
+                            <?php endforeach ?>
                         </div>
                     </div>
                 </div>

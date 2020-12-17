@@ -236,7 +236,7 @@ function view_render_form($post, $callback_args)
                 
                 <select class="regular-text form-control" name="class_format" id="class_format" value="<?= get_post_meta( $post->ID, 'class_format', true ) ?>">
                     <?php foreach($formats as $key => $format) { ?>
-                        <option value="<?= $key ?>" <?= get_post_meta( $post->ID, 'class_format', true ) == $key ? "selected" : "" ?>><?= $format ?></option>
+                        <option value="<?= $format ?>" <?= get_post_meta( $post->ID, 'class_format', true ) == $key ? "selected" : "" ?>><?= $format ?></option>
                     <?php } ?>
                 </select>
             </td>

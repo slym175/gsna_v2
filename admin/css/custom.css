@@ -131,6 +131,10 @@
     margin: 0;
 }
 
+.submit-form .fa.fa-filter {
+    margin-right: 10px;
+}
+
 .btn-gs-classroom {
     background-color: #1c4587;
     color: white;
@@ -442,11 +446,19 @@ p.classroom_price {
     margin-bottom: 0;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
+    width: calc(100% - 100px);
+    height: 39px;
 }
 
 .filter-parent {
     position: relative;
     z-index: 10;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+.filter-section .submit-form {
+    margin-bottom: 5px;
 }
 
 .filter-parent .filter-title {
@@ -460,6 +472,10 @@ p.classroom_price {
     z-index: 999;
     cursor: pointer;
     min-width: 200px;
+}
+
+.filter-section .col {
+    padding-bottom: 0;
 }
 
 .filter-parent .filter-title::after {
@@ -482,6 +498,13 @@ p.classroom_price {
     -webkit-transition: all .15s ease-in-out;
     transition: all .15s ease-in-out;
     width: 5px;
+}
+
+@media only screen and (max-width: 576px) {
+    .filter-parent {
+        width: 100%;
+        margin-right: 0;
+    }
 }
 
 .filter-parent.active .filter-title::after {

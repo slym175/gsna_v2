@@ -2,6 +2,18 @@
 get_header();
 ?>
 
+<div class="row breadcrumbs-section">
+    <div class="col">
+        <div class="breadcrumbs">
+            <?php
+                if ( function_exists('yoast_breadcrumb') ) {
+                    yoast_breadcrumb('<p id="breadcrumbs">','</p>');
+                }
+            ?>
+        </div>
+    </div>
+</div>
+
 <div class="banner-grid-wrapper" style="margin-top: 30px">
     <div class="banner-grid row row-grid row-small">
         <div class="col grid-col small-12 large-6 grid-col-1">

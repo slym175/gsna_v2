@@ -429,3 +429,128 @@ p.classroom_price {
     border-radius: 50px;
     background-color: #fff;
 }
+
+.breadcrumbs-section {
+    margin-top: 1rem;
+}
+
+.breadcrumbs-section .col {
+    padding-bottom: 0;
+}
+
+#form-keywords {
+    margin-bottom: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.filter-parent {
+    position: relative;
+    z-index: 10;
+}
+
+.filter-parent .filter-title {
+    background-color: #fff;
+    padding: .375rem .75rem;
+    border: 1px solid #9ca1a5;
+    color: #6c757d;
+    border-radius: 0;
+    line-height: 1.5;
+    position: relative;
+    z-index: 999;
+    cursor: pointer;
+    min-width: 200px;
+}
+
+.filter-parent .filter-title::after {
+    border-bottom: 2px solid #999;
+    border-right: 2px solid #999;
+    content: '';
+    display: block;
+    height: 5px;
+    margin-top: -4px;
+    pointer-events: none;
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    -webkit-transform-origin: 66% 66%;
+    -ms-transform-origin: 66% 66%;
+    transform-origin: 66% 66%;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+    -webkit-transition: all .15s ease-in-out;
+    transition: all .15s ease-in-out;
+    width: 5px;
+}
+
+.filter-parent.active .filter-title::after {
+    -webkit-transform: rotate(-135deg);
+    -ms-transform: rotate(-135deg);
+    transform: rotate(-135deg);
+}
+
+.filter-parent .filter-menu {
+    position: absolute;
+    width: 100%;
+    padding: 1rem;
+    -webkit-box-shadow: 0 1px 4px 0 rgba(0,0,0,.7);
+    -moz-box-shadow: 0 1px 4px 0 rgba(0,0,0,.7);
+    box-shadow: 0 1px 4px 0 rgba(0,0,0,.7);
+    margin-bottom: 1rem;
+    opacity: 0;
+    visibility: hidden;
+    height: 0;
+    max-height: 200px;
+    background-color: #fff;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.filter-parent.active .filter-menu {
+    opacity: 1;
+    visibility: visible;
+    height: unset;
+}
+
+.filter-parent.active .filter-menu .filter-action {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: .5rem 1rem;
+}
+
+/* width */
+.filter-parent .filter-menu::-webkit-scrollbar {
+    width: 8px;
+}
+  
+  /* Track */
+.filter-parent .filter-menu::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+}
+   
+  /* Handle */
+.filter-parent .filter-menu::-webkit-scrollbar-thumb {
+    background: rgb(167, 167, 167); 
+}
+  
+  /* Handle on hover */
+.filter-parent .filter-menu::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+}
+
+.filter-parent .filter-menu .form-check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: start;
+}
+
+.filter-parent .checkmark {
+    color: #333;
+    font-size: 15px;
+    font-weight: 400;
+    white-space: nowrap;
+    margin-bottom: 12px;
+}

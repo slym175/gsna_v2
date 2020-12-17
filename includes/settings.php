@@ -239,6 +239,27 @@ if(!class_exists("GsSettingsPage")) {
                     )
                 ) // Callback Arguments          
             );
+
+            add_settings_field(
+                'fanpage_url', // ID
+                'Fanpage URL', // Title 
+                array( $this, 'gs_render_settings_field' ), // Callback
+                'gs-settings', // Page
+                'gs_setting_section', // Section 
+                array (
+                    'parent'        => 'gs_options', // Option name
+                    'id'            => 'fanpage_url', // Field ID
+                    'class'         => 'regular-text one-line', // Field ID
+                    'type'          => 'input', // Field Type
+                    'subtype'       => 'text', // Field Subtype
+                    'name'          => 'fanpage_url', // Field Name
+                    'description'   => '',
+                    'options'       => array(
+                        'required'  => true,
+                        // 'rows'      => 5
+                    )
+                ) // Callback Arguments          
+            );
         }
 
         /** 

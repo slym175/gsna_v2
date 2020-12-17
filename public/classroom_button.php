@@ -10,7 +10,8 @@ function tutor_register_classroom_action () {
     $class = intval($_POST['classroom_id']);
     $status = 'pending';
 	
-	$table_name = $wpdb->prefix . 'gs_user_classrooms';
+    $table_name = $wpdb->prefix . 'gs_user_classrooms';
+    $user_data = get_user_by( 'ID', $user );
 	
 	if(is_user_logged_in()) {
         if(!isTutorSendedRequest($user, $class)) {
@@ -19,21 +20,32 @@ function tutor_register_classroom_action () {
                 $table_name, 
                 array( 
                     'user_id' => $user, 
+                    'user_name' => $user_data->first_name . ' ' . $user_data->last_name, 
+                    'user_phone' => esc_attr( get_the_author_meta( 'user_phone', $user ) ), 
+                    'user_email' => $user_data->user_email, 
                     'classroom_id' => $class, 
+                    'classroom_name' => get_the_title( $class ),
+                    'classroom_code' => get_post_meta( $class, 'class_ID', true ),
                     'status' => $status, 
                     'created_at' => current_time( 'mysql' ),
                 ),
                 array(
                     '%d',
+                    '%s',
+                    '%s',
+                    '%s',
                     '%d',
+                    '%s',
+                    '%s',
+                    '%s',
                     '%s'
                 )
             );
-            echo "Đã đề nghị"; die;
+            echo "Đăng ký thành công"; die;
         }
-        echo "Đã đề nghị"; die;
+        echo "Đã đăng ký"; die;
     }else{
-        echo "Có lỗi"; die;
+        echo "Vui lòng đăng nhập"; die;
     }
 }
 

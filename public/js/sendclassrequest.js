@@ -18,8 +18,11 @@ jQuery(document).ready(function () {
             },
             success: function(response) {
                 //Làm gì đó khi dữ liệu đã được xử lý
-                console.log(response)
+                // console.log(response)
                 self.empty().html(response)
+                jQuery('.gs-popup-classroom .contents .noty').empty().append(response);
+                jQuery('.gs-popup-classroom').removeClass('d-none')
+                
             },
             error: function( jqXHR, textStatus, errorThrown ){
                 //Làm gì đó khi có lỗi xảy ra
@@ -27,6 +30,11 @@ jQuery(document).ready(function () {
             }
         });
     });
+
+    jQuery('.gs-popup-classroom .contents i.fa.fa-times').click(function(e) {
+        e.preventDefault();
+        jQuery('.gs-popup-classroom').addClass('d-none')
+    })
 
     jQuery('#filter_province').select2({
         data: jQuery.parseJSON(request_data.local_address),

@@ -3,7 +3,7 @@
  * Plugin Name:       GiaSuNhatAnh Classroom
  * Plugin URI:        http://nanoweb.vn/
  * Description:       Quản trị khóa học, gia sư
- * Version:           1.1.0
+ * Version:           1.2.0
  * Author:            NanoWeb && thuyhu9876@gmail.com
  * Author URI:        http://nanoweb.vn/
  * License:           GPL v2 or later
@@ -219,7 +219,12 @@ function gs_create_database()
     $sql = "CREATE TABLE $table_name (
         id mediumint(9) NOT NULL AUTO_INCREMENT,
         user_id mediumint(9) NOT NULL,
+        user_name varchar(255) NOT NULL,
+        user_phone varchar(255) NOT NULL,
+        user_email varchar(255) NOT NULL,
         classroom_id mediumint(9) NOT NULL,
+        classroom_name varchar(255) NOT NULL,
+        classroom_code varchar(50) NOT NULL,
         status tinytext NOT NULL,
         is_seen tinyint DEFAULT 0,
         created_at datetime DEFAULT '0000-00-00 00:00:00',

@@ -129,6 +129,15 @@ get_header();
         <?php endwhile ?>
     </div>
 </div>
-
+<div class="gs-popup-classroom d-none">
+    <div class="contents">
+        <i class="fa fa-times"></i>
+        <p class="noty"  style="margin-bottom: 6px; fonnt-size: 18px; font-weight: bold"></p>
+        <?php if(get_option( 'fanpage_url' )['google_api_key']) : ?>
+            <p style="margin-bottom: 6px;">Vui lòng liên hệ fanpage để được hướng dẫn</p>
+            <a href="<?= get_option( 'fanpage_url' )['google_api_key'] ?>"><?= get_option( 'fanpage_url' )['google_api_key'] ?></a>
+        <?php endif ?>
+    </div>
+</div>
 <?php 
 get_footer( );

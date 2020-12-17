@@ -2210,5 +2210,5 @@ function get_districts_locations()
         <?php
     }
 
-    // die;
+    die;
 }

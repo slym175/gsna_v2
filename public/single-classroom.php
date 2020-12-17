@@ -145,9 +145,9 @@ get_header();
     <div class="contents">
         <i class="fa fa-times"></i>
         <p class="noty"  style="margin-bottom: 6px; fonnt-size: 18px; font-weight: bold"></p>
-        <?php if(get_option( 'fanpage_url' )['google_api_key']) : ?>
+        <?php if(get_option( 'gs_options' )['fanpage_url']) : ?>
             <p style="margin-bottom: 6px;">Vui lòng liên hệ fanpage để được hướng dẫn</p>
-            <a href="<?= get_option( 'fanpage_url' )['google_api_key'] ?>"><?= get_option( 'fanpage_url' )['google_api_key'] ?></a>
+            <a href="<?= get_option( 'gs_options' )['fanpage_url'] ?>"><?= get_option( 'gs_options' )['fanpage_url'] ?></a>
         <?php endif ?>
     </div>
 </div>

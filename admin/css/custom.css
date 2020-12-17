@@ -577,3 +577,11 @@ p.classroom_price {
     white-space: nowrap;
     margin-bottom: 12px;
 }
+
+@media only screen and (max-width: 768px) {
+    .widget_products .card .card-footer {
+        opacity: 1;
+        visibility: visible;
+        height: 36px;
+    }
+}

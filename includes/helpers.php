@@ -1169,6 +1169,22 @@ function isTutorCompletedProfile($user_id) : bool
     return true;
 }
 
+function setClassroomCode($class_id) {
+    $str_id = strlen((string) $class_id);
+    $class_code = (string) $class_id;
+    if($str_id <= 5) {
+        for($i = 0; $i < 5 - $str_id; $i++ ) {
+            $class_code = "0".$class_code;
+        }
+    }
+    update_post_meta( $class_id, 'class_ID', "L".$class_code );
+    return "L".$class_code;
+}
+
+// function getClassroomCode() {
+//     echo get_post_meta( get_the_ID(  ), 'class_ID', true );
+// }
+
 function tutorUncompletedProfileMessage($user_id)
 {
     if(!isTutorCompletedProfile($user_id)) {
@@ -1224,4 +1240,14 @@ function data_tree($data, $parent_id = 0){
         }
     }
     return $return;
+}
+
+function getClassroomAddressIframe($class_ID)
+{
+    $address = urlencode(get_post_meta( $class_ID, 'class_address', true ) ? get_post_meta( $class_ID, 'class_address', true ) : "62 Đình Thôn- Phường Mỹ Đình 1- Q Nam Từ Liêm Hà Nội");
+    printf('<iframe frameborder="0" width="600px" height="auto" src="https://www.google.com/maps/embed/v1/place?key=%1$s&q=%2$s&zoom=14"></iframe>',
+        get_option( 'gs_options' )['google_api_key'],
+        utf8_decode($address)
+    );
+
 }

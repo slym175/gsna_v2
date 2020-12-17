@@ -135,6 +135,8 @@ if(!class_exists('GiaSuNhatAnh')) {
         public static function public_enqueue_scripts_loader()
         {
 
+            wp_register_style( 'gs-fontawesome', GS_PLUGIN_DIR_ROOT . '/admin/css/all.min.css', array() );
+            wp_enqueue_style( 'gs-fontawesome' );
             wp_register_style( 'gs-select2', GS_PLUGIN_DIR_ROOT . '/admin/css/select2.min.css', array() );
             wp_enqueue_style( 'gs-select2' );
             wp_register_style( 'gs-custom', GS_PLUGIN_DIR_ROOT . '/admin/css/custom.css', array() );
@@ -142,6 +144,9 @@ if(!class_exists('GiaSuNhatAnh')) {
 
             wp_register_script('gs-jquery', GS_PLUGIN_DIR_ROOT . '/public/js/jquery-3.5.1.min.js', 1, true);
             wp_enqueue_script('gs-jquery');
+
+            wp_register_script('gs-fontawesome', GS_PLUGIN_DIR_ROOT . '/public/js/all.min.js', 1, true);
+            wp_enqueue_script('gs-fontawesome');
 
             wp_register_script('gs-select2', GS_PLUGIN_DIR_ROOT . '/admin/js/select2.min.js', 1, true);
             wp_enqueue_script('gs-select2');

@@ -116,6 +116,18 @@ if(!class_exists('ClassroomType')) {
             );
     
             register_taxonomy( 'class_theme', 'classroom', $theme_args );
+
+            register_post_status( 'teaching', array(
+                'label'                     => _x( 'Teaching', 'classroom', GS_TEXTDOMAIN ),
+                'public'                    => true,
+                'label_count'               => _n_noop( 'Teaching <span class="count">(%s)</span>', 'Teaching <span class="count">(%s)</span>', GS_TEXTDOMAIN ),
+                // 'post_type'                 => array( 'classroom' ), // Define one or more post types the status can be applied to.
+                'show_in_admin_all_list'    => true,
+                'show_in_admin_status_list' => true,
+                'show_in_metabox_dropdown'  => true,
+                'show_in_inline_dropdown'   => true,
+                'dashicon'                  => 'dashicons-yes',
+            ) );
         }
 
         public static function classroom_meta_box()
@@ -133,8 +145,8 @@ function view_render_form($post, $callback_args)
 {
     ?> <table>
         <tr class="form-row">
-            <td><label for="class_ID">Thời lượng giảng dạy</label></td>
-            <td><input class="regular-text form-control" type="text" name="class_times" id="class_times" value="<?= get_post_meta( $post->ID, 'class_times', true ) ?>"></td>
+            <td><label for="class_ID">Mã lớp</label></td>
+            <td><?= setClassroomCode($post->ID) ?></td>
         </tr>
         <tr class="form-row">
             <td><label for="class_times">Thời lượng giảng dạy</label></td>
@@ -196,15 +208,15 @@ function view_render_form($post, $callback_args)
             <td><label for="class_target">Đối tượng giảng dạy</label></td>
             <td>
                 <?php 
-                    $targ = is_array(get_post_meta( $post->ID, 'class_target', true )) ? get_post_meta( $post->ID, 'class_target', true ) : array();
+                    $targ = get_post_meta( $post->ID, 'class_target', true ) ? get_post_meta( $post->ID, 'class_target', true ) : "";
 
                     $targ_value = array_map(function($item) {
                         return rtrim(ltrim($item, " "), " ");
                     }, explode(';', get_option('gs_options')['tutor_targets']));
                 ?>
-                <select class="regular-text form-control" name="class_target[]" id="class_target" multiple>
+                <select class="regular-text form-control" name="class_target" id="class_target">
                     <?php foreach($targ_value as $tar) : ?>
-                        <option value="<?= $tar ?>" <?= in_array($tar, $targ) ? 'selected' : '' ?>><?= $tar ?></option>
+                        <option value="<?= $tar ?>" <?= $tar == $targ ? 'selected' : '' ?>><?= $tar ?></option>
                     <?php endforeach ?>
                 </select>
             </td>
@@ -401,6 +413,9 @@ function gs_post_meta_save( $post_id )
     elseif (empty($new) && $old)
         delete_post_meta($post_id, 'class_schedule', $old);
 
+    // update_post_meta( $post_id, 'class_ID', setClassroomCode($post_id) );
+    setClassroomCode($post_id);
+
     if(!isset($_POST['class_times'])) {
         $_POST['class_times'] = "";
     }
@@ -445,21 +460,27 @@ function gs_post_meta_save( $post_id )
     update_post_meta( $post_id, 'class_gender', $class_gender );
 
     //Target
-    $old_targets = get_post_meta($post_id, 'class_target', true);
-    $new_targets = array();
+    // $old_targets = get_post_meta($post_id, 'class_target', true);
+    // $new_targets = array();
 
-    $targets = isset($_POST['class_target']) ? $_POST['class_target'] : array();
-    $count_targets = count($targets);
+    // $targets = isset($_POST['class_target']) ? $_POST['class_target'] : array();
+    // $count_targets = count($targets);
 
-    for ($i = 0; $i < $count_targets; $i++) {
-        if ($targets[$i] != '') :
-            $new_targets[$i] = stripslashes(strip_tags($targets[$i]));
-        endif;
+    // for ($i = 0; $i < $count_targets; $i++) {
+    //     if ($targets[$i] != '') :
+    //         $new_targets[$i] = stripslashes(strip_tags($targets[$i]));
+    //     endif;
+    // }
+    // if (!empty($new_targets) && $new_targets != $old_targets)
+    //     update_post_meta($post_id, 'class_target', $new_targets);
+    // elseif (empty($new_targets) && $old_targets)
+    //     delete_post_meta($post_id, 'class_target', $old_targets);
+
+    if(!isset($_POST['class_target'])) {
+        $_POST['class_target'] = "";
     }
-    if (!empty($new_targets) && $new_targets != $old_targets)
-        update_post_meta($post_id, 'class_target', $new_targets);
-    elseif (empty($new_targets) && $old_targets)
-        delete_post_meta($post_id, 'class_target', $old_targets);
+    $class_targets = sanitize_text_field( $_POST['class_target'] );
+    update_post_meta( $post_id, 'class_target', $class_targets );
 
     //Address
     if(!isset($_POST['class_address'])) {

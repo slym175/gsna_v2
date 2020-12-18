@@ -99,6 +99,13 @@ jQuery(document).ready(function () {
         }
     })
 
+    jQuery(document).on('click', function(e) {
+        var container = jQuery('.filter-parent');
+        if (!$(e.target).closest(container).length) {
+            container.removeClass('active');
+        }
+    });
+
     $('.filter-parent input[type="checkbox"]').change(function() {
         var text = jQuery(this).parents('.filter-menu-list').data('name');
         var count = jQuery(this).parents('.filter-menu-list').find('input[type="checkbox"]:checked').length

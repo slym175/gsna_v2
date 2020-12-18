@@ -508,7 +508,8 @@ p.classroom_price {
     }
 }
 
-.filter-parent.active .filter-title::after {
+.filter-parent.active .filter-title::after,
+.filter-parent:hover .filter-title::after {
     -webkit-transform: rotate(-135deg);
     -ms-transform: rotate(-135deg);
     transform: rotate(-135deg);
@@ -532,13 +533,15 @@ p.classroom_price {
     z-index: 5;
 }
 
-.filter-parent.active .filter-menu {
+.filter-parent.active .filter-menu,
+.filter-parent:hover .filter-menu {
     opacity: 1;
     visibility: visible;
     height: unset;
 }
 
-.filter-parent.active .filter-menu .filter-action {
+.filter-parent.active .filter-menu .filter-action,
+.filter-parent:hover .filter-menu .filter-action {
     position: absolute;
     bottom: 0;
     left: 0;

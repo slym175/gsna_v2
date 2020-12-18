@@ -144,10 +144,10 @@ get_header();
 <div class="gs-popup-classroom d-none">
     <div class="contents">
         <i class="fa fa-times"></i>
-        <p class="noty"  style="margin-bottom: 6px; fonnt-size: 18px; font-weight: bold"></p>
+        <div class="noty"  style="margin-bottom: 6px; font-size: 28px; font-weight: bold"></div>
         <?php if(get_option( 'gs_options' )['fanpage_url']) : ?>
-            <p style="margin-bottom: 6px;">Vui lòng liên hệ fanpage để được hướng dẫn</p>
-            <a href="<?= get_option( 'gs_options' )['fanpage_url'] ?>"><?= get_option( 'gs_options' )['fanpage_url'] ?></a>
+            <p style="margin-bottom: 6px; margin-top: 30px">Liên hệ fanpage để được hướng dẫn</p>
+            <a style="word-break: break-word;" href="<?= get_option( 'gs_options' )['fanpage_url'] ?>"><?= get_option( 'gs_options' )['fanpage_url'] ?></a>
         <?php endif ?>
     </div>
 </div>

@@ -422,6 +422,13 @@ p.classroom_price {
     background-color: #d2e6f6;
     box-shadow: 0px 1px 7px 0px #d2e6f6;
     position: relative;
+    max-width: 90%;
+}
+
+@media only screen and (max-width: 768px) {
+    .gs-popup-classroom .contents {
+        padding: 1rem;
+    }
 }
 
 .gs-popup-classroom .contents i.fa.fa-times {

@@ -41,11 +41,11 @@ function tutor_register_classroom_action () {
                     '%s'
                 )
             );
-            echo "Đăng ký thành công"; die;
+            echo __('Đăng ký thành công', GS_TEXTDOMAIN); die;
         }
-        echo "Đã đăng ký"; die;
+        echo __('Đã đăng ký lớp trước đó', GS_TEXTDOMAIN); die;
     }else{
-        echo "Vui lòng đăng nhập"; die;
+        echo "0"; die;
     }
 }
 

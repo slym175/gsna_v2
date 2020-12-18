@@ -452,7 +452,7 @@ p.classroom_price {
 
 .filter-parent {
     position: relative;
-    z-index: 10;
+    /* z-index: 10; */
     margin-right: 5px;
     margin-bottom: 5px;
 }
@@ -472,6 +472,7 @@ p.classroom_price {
     z-index: 999;
     cursor: pointer;
     min-width: 200px;
+    z-index: 2;
 }
 
 .filter-section .col {
@@ -528,6 +529,7 @@ p.classroom_price {
     background-color: #fff;
     overflow-x: hidden;
     overflow-y: scroll;
+    z-index: 5;
 }
 
 .filter-parent.active .filter-menu {

@@ -18,14 +18,14 @@ jQuery(document).ready(function () {
             },
             success: function(response) {
                 //Làm gì đó khi dữ liệu đã được xử lý
-                // console.log(response)
+                console.log(response)
                 self.empty().html('Đăng ký nhận lớp')
                 if(response == "0") {
                     var form = jQuery('#login-form-popup .account-login-inner').html()
                     jQuery('.gs-popup-classroom .contents .noty').empty().append(form)
                     jQuery('.gs-popup-classroom .contents .noty').css('font-size', '15px')
                     jQuery('.gs-popup-classroom').removeClass('d-none')
-                }else{
+                } else {
                     jQuery('.gs-popup-classroom .contents .noty').empty().append(response);
                     jQuery('.gs-popup-classroom').removeClass('d-none')
                 }

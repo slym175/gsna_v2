@@ -16,6 +16,9 @@ get_header();
 
 <div class="banner-grid-wrapper" style="margin-top: 30px">
     <div class="banner-grid row row-grid row-small">
+        <div class="col small-12">
+            <?php tutorUncompletedProfileMessage(get_current_user_id()) ?>
+        </div>
         <div class="col grid-col small-12 large-6 grid-col-1">
             <div class="col-inner single-classroom-details">
                 <?php while(have_posts(  )) { the_post( ); ?>

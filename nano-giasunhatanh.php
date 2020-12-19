@@ -244,8 +244,8 @@ function gs_create_database()
 function misha_remove_my_account_links( $menu_links ){
  
 	unset( $menu_links['edit-address'] ); // Addresses
-	//unset( $menu_links['dashboard'] ); // Remove Dashboard
-	//unset( $menu_links['payment-methods'] ); // Remove Payment Methods
+	unset( $menu_links['dashboard'] ); // Remove Dashboard
+	unset( $menu_links['payment-methods'] ); // Remove Payment Methods
 	unset( $menu_links['orders'] ); // Remove Orders
 	unset( $menu_links['downloads'] ); // Disable Downloads
 	//unset( $menu_links['edit-account'] ); // Remove Account details tab

@@ -46,6 +46,14 @@ if(!class_exists('GS_Profile')) {
                         </tr>
                         <tr>
                             <th>
+                                <label for="user_birth"><?php echo __( 'Ngày tháng năm sinh', GS_TEXTDOMAIN ); ?></label>
+                            </th>
+                            <td>
+                                <input type="date" name="user_birth" id="user_birth" value="<?php echo esc_attr( get_the_author_meta( 'user_birth', $profileuser->ID ) ); ?>" class="regular-text" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
                                 <label for="user_train_province"><?php echo __( 'Tỉnh/thành (Địa điểm dạy)', GS_TEXTDOMAIN ); ?></label>
                             </th>
                             <td>
@@ -284,8 +292,12 @@ if(!class_exists('GS_Profile')) {
                     </span>
                 </p>
                 <p class="form-user_phone">
-                    <label for="user_phone"><?php echo __( 'Số điện thoại', GS_TEXTDOMAIN ); ?></label>
-                    <input type="text" name="user_phone" id="user_phone" value="<?php echo esc_attr( get_the_author_meta( 'user_phone', $profileuser->ID ) ); ?>" class="regular-text" />
+                    <label for="user_phone"><?php echo __( 'Số điện thoại', GS_TEXTDOMAIN ); ?> <span class="required">*</span></label>
+                    <input type="text" name="user_phone" id="user_phone" value="<?php echo esc_attr( get_the_author_meta( 'user_phone', $profileuser->ID ) ); ?>" class="regular-text" required />
+                </p>
+                <p class="form-user_birth">
+                    <label for="user_birth"><?php echo __( 'Ngày tháng năm sinh', GS_TEXTDOMAIN ); ?> <span class="required">*</span></label>
+                    <input type="date" name="user_birth" id="user_birth" value="<?php echo esc_attr( get_the_author_meta( 'user_birth', $profileuser->ID ) ); ?>" class="regular-text" required />
                 </p>
                 <p class="form-user_train_province">
                     <label for="user_train_province"><?php echo __( 'Tỉnh/thành (Địa điểm dạy)', GS_TEXTDOMAIN ); ?></label>
@@ -489,6 +501,7 @@ if(!class_exists('GS_Profile')) {
                     
             update_user_meta($userId, 'user_gender', $_REQUEST['user_gender']);
             update_user_meta($userId, 'user_phone', $_REQUEST['user_phone']);
+            update_user_meta($userId, 'user_birth', $_REQUEST['user_birth']);
             update_user_meta($userId, 'user_train_province', $_REQUEST['user_train_province']);
             update_user_meta($userId, 'user_train_district', $_REQUEST['user_train_district']);
             update_user_meta($userId, 'user_address', $_REQUEST['user_address']);

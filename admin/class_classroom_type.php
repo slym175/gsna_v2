@@ -146,7 +146,7 @@ function view_render_form($post, $callback_args)
     ?> <table>
         <tr class="form-row">
             <td><label for="class_ID">Mã lớp</label></td>
-            <td><?= setClassroomCode($post->ID) ?></td>
+            <td><input class="regular-text form-control" type="text" name="class_ID" id="class_ID" value="<?= get_post_meta( $post->ID, 'class_ID', true ) ?>"></td>
         </tr>
         <tr class="form-row">
             <td><label for="class_times">Thời lượng giảng dạy</label></td>
@@ -414,7 +414,12 @@ function gs_post_meta_save( $post_id )
         delete_post_meta($post_id, 'class_schedule', $old);
 
     // update_post_meta( $post_id, 'class_ID', setClassroomCode($post_id) );
-    setClassroomCode($post_id);
+    if(!isset($_POST['class_ID'])) {
+        $_POST['class_ID'] = "";
+    }
+    $class_ID = sanitize_text_field( $_POST['class_ID'] );
+    update_post_meta( $post_id, 'class_ID', $class_ID );
+    // setClassroomCode($post_id);
 
     if(!isset($_POST['class_times'])) {
         $_POST['class_times'] = "";

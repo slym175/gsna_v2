@@ -453,8 +453,14 @@ p.classroom_price {
     margin-bottom: 0;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
-    width: calc(100% - 100px);
+    width: 100%;
     height: 39px;
+}
+
+@media only screen and (max-width: 991px) {
+    #form-keywords {
+        width: calc(100% - 100px);
+    }
 }
 
 .filter-parent {
@@ -596,4 +602,33 @@ p.classroom_price {
         visibility: visible;
         height: 36px;
     }
+}
+
+.noty h3.uppercase {
+    margin-bottom: 12px;
+}
+
+.noty .woocommerce-form-row label {
+    text-align: left;
+}
+
+.noty .woocommerce-form-login__rememberme {
+    margin-bottom: 0;
+}
+
+.woocommerce-MyAccount-content .select2.select2-container {
+    margin-bottom: 1.3em;
+}
+
+.gs_notice {
+    font-size: 14px;
+    color: #f30000;
+    padding-left: 16px;
+    border-left: 5px solid;
+}
+
+.gs_notice a {
+    color: #f30000;
+    text-decoration: underline;
+    font-weight: bold;
 }

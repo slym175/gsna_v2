@@ -14,36 +14,43 @@ function tutor_register_classroom_action () {
     $user_data = get_user_by( 'ID', $user );
 	
 	if(is_user_logged_in()) {
-        if(!isTutorSendedRequest($user, $class)) {
-            $roles = ( array ) $user->roles;
-            $wpdb->insert( 
-                $table_name, 
-                array( 
-                    'user_id' => $user, 
-                    'user_name' => $user_data->first_name . ' ' . $user_data->last_name, 
-                    'user_phone' => esc_attr( get_the_author_meta( 'user_phone', $user ) ), 
-                    'user_email' => $user_data->user_email, 
-                    'classroom_id' => $class, 
-                    'classroom_name' => get_the_title( $class ),
-                    'classroom_code' => get_post_meta( $class, 'class_ID', true ),
-                    'status' => $status, 
-                    'created_at' => current_time( 'mysql' ),
-                ),
-                array(
-                    '%d',
-                    '%s',
-                    '%s',
-                    '%s',
-                    '%d',
-                    '%s',
-                    '%s',
-                    '%s',
-                    '%s'
-                )
-            );
-            echo __('Đăng ký thành công', GS_TEXTDOMAIN); die;
+        if(isTutorCompletedProfile($user_data)) {
+            if(!isTutorSendedRequest($user, $class)) {
+                $roles = ( array ) $user->roles;
+                $wpdb->insert( 
+                    $table_name, 
+                    array( 
+                        'user_id' => $user, 
+                        'user_name' => $user_data->first_name . ' ' . $user_data->last_name, 
+                        'user_phone' => esc_attr( get_the_author_meta( 'user_phone', $user ) ), 
+                        'user_email' => $user_data->user_email, 
+                        'classroom_id' => $class, 
+                        'classroom_name' => get_the_title( $class ),
+                        'classroom_code' => get_post_meta( $class, 'class_ID', true ),
+                        'status' => $status, 
+                        'created_at' => current_time( 'mysql' ),
+                    ),
+                    array(
+                        '%d',
+                        '%s',
+                        '%s',
+                        '%s',
+                        '%d',
+                        '%s',
+                        '%s',
+                        '%s',
+                        '%s'
+                    )
+                );
+                echo __('Đăng ký thành công', GS_TEXTDOMAIN); die;
+            }
+            echo __('Đã đăng ký lớp trước đó', GS_TEXTDOMAIN); die;
+        }else{
+            printf('<a class="edit-account" href="%1$s">%2$s</a>',
+                wc_customer_edit_account_url(),
+                __('Cập nhật đầy đủ hồ sơ gia sư trước khi nhận lớp', GS_TEXTDOMAIN)
+            ); die;
         }
-        echo __('Đã đăng ký lớp trước đó', GS_TEXTDOMAIN); die;
     }else{
         echo "0"; die;
     }

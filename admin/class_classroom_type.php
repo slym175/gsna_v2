@@ -7,6 +7,7 @@ if(!class_exists('ClassroomType')) {
         {
             add_action( 'init', array($this, 'classroom_type_init') );
             add_action( 'add_meta_boxes', array($this, 'classroom_meta_box') );
+            add_action('admin_footer-post.php', array($this, 'wpb_append_post_status_list') );
         }
 
         public static function classroom_type_init(){
@@ -137,22 +138,49 @@ if(!class_exists('ClassroomType')) {
             add_meta_box( 'class_tutor', __( 'Gia sư', GS_TEXTDOMAIN ), 'view_render_tutor', 'classroom', 'advanced', 'high', array());
             add_meta_box( 'class_schedule', __( 'Lịch giảng dạy', GS_TEXTDOMAIN ), 'view_render_repeater', 'classroom', 'advanced', 'high', array());
         }
+
+        // Using jQuery to add it to post status dropdown
+
+        public static function wpb_append_post_status_list()
+        {
+            global $post;
+            $complete = '';
+            $label = '';
+            if($post->post_type == 'classroom'){
+                if($post->post_status == 'teaching'){
+                    $complete = ' selected="selected"';
+                    $label = '<span id="post-status-display"> '. __('Đang dạy', GS_TEXTDOMAIN) .'</span>';
+                }
+                echo '
+                    <script>
+                        jQuery(document).ready(function($){
+                            $("select#post_status").append("<option value=\"teaching\" '.$complete.'>'. __('Đang dạy', GS_TEXTDOMAIN) .'</option>");
+                            $(".misc-pub-section label").append("'.$label.'");
+                        });
+                    </script>
+                ';
+            }
+        }
     }
     new ClassroomType;
 }
 
+
+
 function view_render_form($post, $callback_args)
 {
     ?> <table>
-        <tr class="form-row">
-            <td><label for="class_ID">Mã lớp</label></td>
-            <td><input class="regular-text form-control" type="text" name="class_ID" id="class_ID" value="<?= get_post_meta( $post->ID, 'class_ID', true ) ?>"></td>
-        </tr>
-        <tr class="form-row">
-            <td><label for="class_times">Thời lượng giảng dạy</label></td>
-            <td><input class="regular-text form-control" type="text" name="class_times" id="class_times" value="<?= get_post_meta( $post->ID, 'class_times', true ) ?>"></td>
-        </tr>
-        <!-- <tr class="form-row">
+    <tr class="form-row">
+        <td><label for="class_ID">Mã lớp</label></td>
+        <td><input class="regular-text form-control" type="text" name="class_ID" id="class_ID"
+                value="<?= get_post_meta( $post->ID, 'class_ID', true ) ?>"></td>
+    </tr>
+    <tr class="form-row">
+        <td><label for="class_times">Thời lượng giảng dạy</label></td>
+        <td><input class="regular-text form-control" type="text" name="class_times" id="class_times"
+                value="<?= get_post_meta( $post->ID, 'class_times', true ) ?>"></td>
+    </tr>
+    <!-- <tr class="form-row">
             <td><label for="class_schedule">Lịch trình dạy</label></td>
             <td>
                 <?php //$schedules = array(
@@ -184,67 +212,80 @@ function view_render_form($post, $callback_args)
                 </select>
             </td>
         </tr> -->
-        <tr class="form-row">
-            <td><label for="class_price">Học phí (/buổi)</label></td>
-            <td><input class="regular-text form-control" type="number" name="class_price" id="class_price" value="<?= get_post_meta( $post->ID, 'class_price', true ) ?>"></td>
-        </tr>
-        <tr class="form-row">
-            <td><label for="class_fee">Phí nhận lớp</label></td>
-            <td><input class="regular-text form-control" type="number" name="class_fee" id="class_fee" value="<?= get_post_meta( $post->ID, 'class_fee', true ) ?>"></td>
-        </tr>
-        <tr class="form-row">
-            <td><label for="class_students">Số học viên</label></td>
-            <td><input class="regular-text form-control" type="number" name="class_students" id="class_students" value="<?= get_post_meta( $post->ID, 'class_students', true ) ?>"></td>
-        </tr>
-        <tr class="form-row">
-            <td><label>Giới tính</label></td>
-            <td>
-                <input class="regular-text form-control" type="radio" name="class_gender" id="class_gender_0" value="0" <?= get_post_meta( $post->ID, 'class_gender', true ) == 0 ? "checked" : "" ?>><label for="class_gender_0">Nam</label>
-                <input class="regular-text form-control" type="radio" name="class_gender" id="class_gender_1" value="1" <?= get_post_meta( $post->ID, 'class_gender', true ) == 1 ? "checked" : "" ?>><label for="class_gender_1">Nữ</label>
-                <input class="regular-text form-control" type="radio" name="class_gender" id="class_gender_2" value="2" <?= get_post_meta( $post->ID, 'class_gender', true ) == 2 ? "checked" : "" ?>><label for="class_gender_2">Không yêu cầu</label>
-            </td>
-        </tr>
-        <tr class="form-row">
-            <td><label for="class_target">Đối tượng giảng dạy</label></td>
-            <td>
-                <?php 
+    <tr class="form-row">
+        <td><label for="class_price">Học phí (/buổi)</label></td>
+        <td><input class="regular-text form-control" type="number" name="class_price" id="class_price"
+                value="<?= get_post_meta( $post->ID, 'class_price', true ) ?>"></td>
+    </tr>
+    <tr class="form-row">
+        <td><label for="class_fee">Phí nhận lớp</label></td>
+        <td><input class="regular-text form-control" type="number" name="class_fee" id="class_fee"
+                value="<?= get_post_meta( $post->ID, 'class_fee', true ) ?>"></td>
+    </tr>
+    <tr class="form-row">
+        <td><label for="class_students">Số học viên</label></td>
+        <td><input class="regular-text form-control" type="number" name="class_students" id="class_students"
+                value="<?= get_post_meta( $post->ID, 'class_students', true ) ?>"></td>
+    </tr>
+    <tr class="form-row">
+        <td><label>Giới tính</label></td>
+        <td>
+            <input class="regular-text form-control" type="radio" name="class_gender" id="class_gender_0" value="0"
+                <?= get_post_meta( $post->ID, 'class_gender', true ) == 0 ? "checked" : "" ?>><label
+                for="class_gender_0">Nam</label>
+            <input class="regular-text form-control" type="radio" name="class_gender" id="class_gender_1" value="1"
+                <?= get_post_meta( $post->ID, 'class_gender', true ) == 1 ? "checked" : "" ?>><label
+                for="class_gender_1">Nữ</label>
+            <input class="regular-text form-control" type="radio" name="class_gender" id="class_gender_2" value="2"
+                <?= get_post_meta( $post->ID, 'class_gender', true ) == 2 ? "checked" : "" ?>><label
+                for="class_gender_2">Không yêu cầu</label>
+        </td>
+    </tr>
+    <tr class="form-row">
+        <td><label for="class_target">Đối tượng giảng dạy</label></td>
+        <td>
+            <?php 
                     $targ = get_post_meta( $post->ID, 'class_target', true ) ? get_post_meta( $post->ID, 'class_target', true ) : "";
 
                     $targ_value = array_map(function($item) {
                         return rtrim(ltrim($item, " "), " ");
                     }, explode(';', get_option('gs_options')['tutor_targets']));
                 ?>
-                <select class="regular-text form-control" name="class_target" id="class_target">
-                    <?php foreach($targ_value as $tar) : ?>
-                        <option value="<?= $tar ?>" <?= $tar == $targ ? 'selected' : '' ?>><?= $tar ?></option>
-                    <?php endforeach ?>
-                </select>
-            </td>
-        </tr>
-        <tr class="form-row">
-            <td><label for="class_address">Địa điểm dạy</label></td>
-            <td><textarea class="regular-text form-control" type="text" rows="4" name="class_address" id="class_address"><?= get_post_meta( $post->ID, 'class_address', true )?></textarea></td>
-        </tr>
-        <tr class="form-row">
-            <td><label for="class_format">Hình thức học</label></td>
-            <td>
-                <?php 
+            <select class="regular-text form-control" name="class_target" id="class_target">
+                <?php foreach($targ_value as $tar) : ?>
+                <option value="<?= $tar ?>" <?= $tar == $targ ? 'selected' : '' ?>><?= $tar ?></option>
+                <?php endforeach ?>
+            </select>
+        </td>
+    </tr>
+    <tr class="form-row">
+        <td><label for="class_address">Địa điểm dạy</label></td>
+        <td><textarea class="regular-text form-control" type="text" rows="4" name="class_address"
+                id="class_address"><?= get_post_meta( $post->ID, 'class_address', true )?></textarea></td>
+    </tr>
+    <tr class="form-row">
+        <td><label for="class_format">Hình thức học</label></td>
+        <td>
+            <?php 
                     $formats = array_map(function($item) {
                         return rtrim(ltrim($item, " "), " ");
                     }, explode(';', get_option('gs_options')['tutor_formats']));
                 ?>
-                
-                <select class="regular-text form-control" name="class_format" id="class_format" value="<?= get_post_meta( $post->ID, 'class_format', true ) ?>">
-                    <?php foreach($formats as $key => $format) { ?>
-                        <option value="<?= $format ?>" <?= get_post_meta( $post->ID, 'class_format', true ) == $key ? "selected" : "" ?>><?= $format ?></option>
-                    <?php } ?>
-                </select>
-            </td>
-        </tr>
-        <tr class="form-row">
-            <td><label for="class_caphoc">Cấp học</label></td>
-            <td>
-                <?php 
+
+            <select class="regular-text form-control" name="class_format" id="class_format"
+                value="<?= get_post_meta( $post->ID, 'class_format', true ) ?>">
+                <?php foreach($formats as $key => $format) { ?>
+                <option value="<?= $format ?>"
+                    <?= get_post_meta( $post->ID, 'class_format', true ) == $key ? "selected" : "" ?>><?= $format ?>
+                </option>
+                <?php } ?>
+            </select>
+        </td>
+    </tr>
+    <tr class="form-row">
+        <td><label for="class_caphoc">Cấp học</label></td>
+        <td>
+            <?php 
 
                     $caphocs = array_map(function($item) {
                         return rtrim(ltrim($item, " "), " ");
@@ -253,36 +294,38 @@ function view_render_form($post, $callback_args)
                     // print_r(get_post_meta( $post->ID, 'class_caphoc', true ));
                     
                 ?>
-                <select class="regular-text form-control" name="class_caphoc" id="class_caphoc">
-                    <?php foreach($caphocs as $key => $ch) { ?>
-                        <option value="<?= $ch ?>" <?= get_post_meta( $post->ID, 'class_caphoc', true ) == $ch ? "selected" : "" ?>><?= $ch ?></option>
-                    <?php } ?>
-                </select>
-            </td>
-        </tr>
-        <tr class="form-row">
-            <td><label for="class_level">Trình độ</label></td>
-            <td>
-                <?php 
+            <select class="regular-text form-control" name="class_caphoc" id="class_caphoc">
+                <?php foreach($caphocs as $key => $ch) { ?>
+                <option value="<?= $ch ?>"
+                    <?= get_post_meta( $post->ID, 'class_caphoc', true ) == $ch ? "selected" : "" ?>><?= $ch ?></option>
+                <?php } ?>
+            </select>
+        </td>
+    </tr>
+    <tr class="form-row">
+        <td><label for="class_level">Trình độ</label></td>
+        <td>
+            <?php 
                     $levels = array_map(function($item) {
                         return rtrim(ltrim($item, " "), " ");
                     }, explode(';', get_option('gs_options')['class_levels']));
                     
                     $lev = is_array(get_post_meta( $post->ID, 'class_level', true )) ? get_post_meta( $post->ID, 'class_level', true ) : array();
                 ?>
-                <select class="regular-text form-control" name="class_level[]" id="class_level" multiple>
-                    <?php foreach($levels as $key => $level) { ?>
-                        <option value="<?= $level ?>" <?= in_array($level, $lev) ? "selected" : "" ?>><?= $level ?></option>
-                    <?php } ?>
-                </select>
-            </td>
-        </tr>
-        <tr class="form-row">
-            <td><label for="class_note">Ghi chú</label></td>
-            <td><textarea class="regular-text form-control" type="text" rows="4" name="class_note" id="class_note"><?= get_post_meta( $post->ID, 'class_note', true ) ?></textarea></td>
-        </tr>
-    </table>
-    <?php
+            <select class="regular-text form-control" name="class_level[]" id="class_level" multiple>
+                <?php foreach($levels as $key => $level) { ?>
+                <option value="<?= $level ?>" <?= in_array($level, $lev) ? "selected" : "" ?>><?= $level ?></option>
+                <?php } ?>
+            </select>
+        </td>
+    </tr>
+    <tr class="form-row">
+        <td><label for="class_note">Ghi chú</label></td>
+        <td><textarea class="regular-text form-control" type="text" rows="4" name="class_note"
+                id="class_note"><?= get_post_meta( $post->ID, 'class_note', true ) ?></textarea></td>
+    </tr>
+</table>
+<?php
 }
 
 function view_render_tutor($post, $callback_args)
@@ -293,19 +336,23 @@ function view_render_tutor($post, $callback_args)
     );
     $users = get_users( $args );
     ?>
-        <table>
-            <tr class="form-row">
-                <td>
-                    <select class="regular-text form-control" name="class_tutor" id="class_tutor" value="<?= get_post_meta( $post->ID, 'class_tutor', true ) ?>">
-                        <option value="0" <?= get_post_meta( $post->ID, 'class_tutor', true ) == 0 ? "checked" : "" ?>><?= __('Chưa xác định', GS_TEXTDOMAIN) ?></option>
-                        <?php foreach($users as $key => $user) { ?>
-                            <option value="<?= $user->data->ID ?>" <?= get_post_meta( $post->ID, 'class_tutor', true ) == $user->data->ID ? "checked" : "" ?>><?= $user->data->display_name ?></option>
-                        <?php } ?>
-                    </select>
-                </td>
-            </tr>
-        </table>
-    <?php
+<table>
+    <tr class="form-row">
+        <td>
+            <select class="regular-text form-control" name="class_tutor" id="class_tutor"
+                value="<?= get_post_meta( $post->ID, 'class_tutor', true ) ?>">
+                <option value="0" <?= get_post_meta( $post->ID, 'class_tutor', true ) == 0 ? "checked" : "" ?>>
+                    <?= __('Chưa xác định', GS_TEXTDOMAIN) ?></option>
+                <?php foreach($users as $key => $user) { ?>
+                <option value="<?= $user->data->ID ?>"
+                    <?= get_post_meta( $post->ID, 'class_tutor', true ) == $user->data->ID ? "checked" : "" ?>>
+                    <?= $user->data->display_name ?></option>
+                <?php } ?>
+            </select>
+        </td>
+    </tr>
+</table>
+<?php
 }
 
 function view_render_repeater($post, $callback_args)
@@ -315,68 +362,76 @@ function view_render_repeater($post, $callback_args)
     wp_nonce_field('hhs_repeatable_meta_box_nonce', 'hhs_repeatable_meta_box_nonce');
 
     ?>
-        <table id="class_schedule_table">
-            <thead>
-                <tr>
-                    <th width="5%"></th>
-                    <th width="30%">Thời gian</th>
-                    <th width="30%">Bắt đầu</th>
-                    <th width="30%">Kết thúc</th>
-                    <th width="5%"></th>
-                </tr>
-            </thead>
-            <?php 
+<table id="class_schedule_table">
+    <thead>
+        <tr>
+            <th width="5%"></th>
+            <th width="30%">Thời gian</th>
+            <th width="30%">Bắt đầu</th>
+            <th width="30%">Kết thúc</th>
+            <th width="5%"></th>
+        </tr>
+    </thead>
+    <?php 
             $day_of_week = array('Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ nhật');
             ?>
-            <?php if ($repeatable_fields) :
+    <?php if ($repeatable_fields) :
                 foreach ($repeatable_fields as $field) : ?>
-                    <tr class="form-row">
-                        <td>
-                            <a href="javascript:void(0)" onclick="insertRepeaterRow(this)"><i class="dashicons-before dashicons-insert"></i></a>
-                        </td>
-                        <td class="width: 50%">
-                            <select class="regular-text form-control class_schedule_day" name="class_schedule_day[]" value="<?php echo $field['class_schedule_day'] ?>">
-                                <?php foreach($day_of_week as $key => $day) : ?>
-                                    <option value="<?= $day ?>"<?= $day == $field['class_schedule_day'] ? "selected" : ""?>><?= $day ?></option>
-                                <?php endforeach ?>
-                            </select>
-                        </td>
-                        <td>
-                            <input class="regular-text form-control class_schedule_start" type="time" name="class_schedule_start[]" value="<?php echo $field['class_schedule_start'] ?>">
-                        </td>
-                        <td>
-                            <input class="regular-text form-control class_schedule_end" type="time" name="class_schedule_end[]" value="<?php echo $field['class_schedule_end'] ?>">
-                        </td>
-                        <td>
-                            <a href="javascript:void(0)" onclick="removeRepeaterRow(this)"><i class="dashicons-before dashicons-dismiss"></i></a>
-                        </td>
-                    </tr>
+    <tr class="form-row">
+        <td>
+            <a href="javascript:void(0)" onclick="insertRepeaterRow(this)"><i
+                    class="dashicons-before dashicons-insert"></i></a>
+        </td>
+        <td class="width: 50%">
+            <select class="regular-text form-control class_schedule_day" name="class_schedule_day[]"
+                value="<?php echo $field['class_schedule_day'] ?>">
+                <?php foreach($day_of_week as $key => $day) : ?>
+                <option value="<?= $day ?>" <?= $day == $field['class_schedule_day'] ? "selected" : ""?>><?= $day ?>
+                </option>
                 <?php endforeach ?>
-            <?php else : ?>
-                <tr class="form-row">
-                    <td>
-                        <a href="javascript:void(0)" onclick="insertRepeaterRow(this)"><i class="dashicons-before dashicons-insert"></i></a>
-                    </td>
-                    <td class="width: 50%">
-                        <select class="regular-text form-control class_schedule_day" name="class_schedule_day[]">
-                            <?php foreach($day_of_week as $day) : ?>
-                                <option value="<?= $day ?>"><?= $day ?></option>
-                            <?php endforeach ?>
-                        </select>
-                    </td>
-                    <td>
-                        <input class="regular-text form-control class_schedule_start" type="time" name="class_schedule_start[]">
-                    </td>
-                    <td>
-                        <input class="regular-text form-control class_schedule_end" type="time" name="class_schedule_end[]">
-                    </td>
-                    <td>
-                        <a href="javascript:void(0)" onclick="removeRepeaterRow(this)"><i class="dashicons-before dashicons-dismiss"></i></a>
-                    </td>
-                </tr>
-            <?php endif ?>
-        </table>
-    <?php
+            </select>
+        </td>
+        <td>
+            <input class="regular-text form-control class_schedule_start" type="time" name="class_schedule_start[]"
+                value="<?php echo $field['class_schedule_start'] ?>">
+        </td>
+        <td>
+            <input class="regular-text form-control class_schedule_end" type="time" name="class_schedule_end[]"
+                value="<?php echo $field['class_schedule_end'] ?>">
+        </td>
+        <td>
+            <a href="javascript:void(0)" onclick="removeRepeaterRow(this)"><i
+                    class="dashicons-before dashicons-dismiss"></i></a>
+        </td>
+    </tr>
+    <?php endforeach ?>
+    <?php else : ?>
+    <tr class="form-row">
+        <td>
+            <a href="javascript:void(0)" onclick="insertRepeaterRow(this)"><i
+                    class="dashicons-before dashicons-insert"></i></a>
+        </td>
+        <td class="width: 50%">
+            <select class="regular-text form-control class_schedule_day" name="class_schedule_day[]">
+                <?php foreach($day_of_week as $day) : ?>
+                <option value="<?= $day ?>"><?= $day ?></option>
+                <?php endforeach ?>
+            </select>
+        </td>
+        <td>
+            <input class="regular-text form-control class_schedule_start" type="time" name="class_schedule_start[]">
+        </td>
+        <td>
+            <input class="regular-text form-control class_schedule_end" type="time" name="class_schedule_end[]">
+        </td>
+        <td>
+            <a href="javascript:void(0)" onclick="removeRepeaterRow(this)"><i
+                    class="dashicons-before dashicons-dismiss"></i></a>
+        </td>
+    </tr>
+    <?php endif ?>
+</table>
+<?php
 }
 
 function gs_post_meta_save( $post_id )

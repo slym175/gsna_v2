@@ -24,7 +24,10 @@ get_header();
                 <?php while(have_posts(  )) { the_post( ); ?>
                     <h1>Chi tiết lớp <?= get_post_meta( get_the_ID(  ), 'class_ID', true ) ?></h1>
                     <h4>Lớp: <?= the_title( ) ?></h4>
-                    <p><i class="fa fa-clock"></i> <?= the_date( 'd/m/Y' ) ?></p>
+                    <p class="mb-1" style="margin-bottom: .5em"><i class="fa fa-clock"></i> <?= the_date( 'd/m/Y' ) ?> - <span><?= get_registration_classroom_count(get_the_ID(  )) != 0 ? "Có ".get_registration_classroom_count(get_the_ID(  ))." lượt đăng ký" : __('Chưa có đăng ký') ?></span></p>
+                    <?php if(get_post_status(get_the_ID(  )) == "publish") : ?>
+                        <p class="mb-1"><i class="fa fa-check-circle-o color-available" aria-hidden="true"></i> Tình trạng: Sẵn sàng</p>
+                    <?php endif ?>
                     <hr>
                     <div class="mb-1">
                         <?php if( get_post_meta( get_the_ID(  ), 'class_address', true ) ) { ?>

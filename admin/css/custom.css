@@ -284,6 +284,7 @@ p.classroom_price {
 .widget_products .card .card-body {
     padding: 14px;
     padding-bottom: 36px;
+    min-height: 280px;
 }
 
 .widget_products .card .card-body .class_title{
@@ -312,16 +313,14 @@ p.classroom_price {
     right: 0;
     width: 100%;
     background-color: #38b34b;
-    opacity: 0;
-    visibility: hidden;
-    height: 0;
+    opacity: 1;
+    visibility: visible;
+    height: 36px;
     transition: .5s;
 }
 
 .widget_products .card:hover .card-footer {
-    opacity: 1;
-    visibility: visible;
-    height: 36px;
+    background-color: #28a745;
 }
 
 .widget_products .card .card-footer a{
@@ -631,4 +630,17 @@ p.classroom_price {
     color: #f30000;
     text-decoration: underline;
     font-weight: bold;
+}
+.single-classroom-details .mb-1 i.fa {
+    min-width: 16px;
+    margin-right: 10px;
+    text-align: center;
+}
+
+.color-available {
+    color: #28a745;
+}
+
+.filter-menu-list.d-none {
+    display: none
 }

@@ -173,6 +173,7 @@ $classrooms = new WP_Query($args);
                 </div>
 
                 <?php $provinces = get_provinces_locations(); ?>
+                
                 <div class="filter-parent single">
                     <div class="filter-title">
                         <span class="filter-notice">Chọn tỉnh/thành</span>
@@ -182,7 +183,7 @@ $classrooms = new WP_Query($args);
                             <?php foreach($provinces as $key => $province) : ?>
                                 <div>
                                     <div class="form-check mb-2">
-                                        <input type="checkbox" data-key="<?= $province['key'] ?>" name="filter_province" value="<?= $province['text'] ?>" id="province<?= $key ?>">
+                                        <input type="checkbox" data-key="<?= $province['id'] ?>" name="filter_province" value="<?= $province['text'] ?>" id="province<?= $key ?>">
                                         <label for="province<?= $key ?>" class="checkmark"><?= $province['text'] ?></label>
                                     </div>
                                 </div>
@@ -196,9 +197,18 @@ $classrooms = new WP_Query($args);
                         <span class="filter-notice">Chọn quận/huyện</span>
                     </div>
                     <div class="filter-menu">
-                        <div class="filter-menu-list" data-name="quận/huyện">
-                            
-                        </div>
+                        <?php foreach($provinces as $key => $province) : ?>
+                            <div class="filter-menu-list d-none" data-pkey="<?= $provinces[$key]['id'] ?>" data-name="quận/huyện">
+                                <?php foreach($provinces[$key]['district'] as $k => $district) : ?>
+                                    <div class="district-display">
+                                        <div class="form-check mb-2">
+                                            <input type="checkbox" name="filter_district" value="<?= $district['text'] ?>" id="district<?= $provinces[$key]['id'] ?><?= $k ?>">
+                                            <label for="district<?= $provinces[$key]['id'] ?><?= $k ?>" class="checkmark"><?= $district['text'] ?></label>
+                                        </div>
+                                    </div>
+                                <?php endforeach ?>
+                            </div>
+                        <?php endforeach ?>
                     </div>
                 </div>
 
@@ -250,6 +260,7 @@ $classrooms = new WP_Query($args);
             <?php tutorUncompletedProfileMessage(get_current_user_id()) ?>
         </div>
     </div>
+    
     <div class="banner-grid-wrapper" style="margin-top: 10px">
         <div class="banner-grid row row-grid row-small">
             <div class="col small-12 large-12">

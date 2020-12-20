@@ -3077,3 +3077,25 @@ function get_districts_locations()
 
     die;
 }
+
+function fanpageURLArray()
+{
+    if(get_option('gs_options')['fanpage_url']) {
+        $fanpages = array_map(function($item) {
+            return rtrim(ltrim($item, " "), " ");
+        }, explode(';', get_option('gs_options')['fanpage_url']));
+    
+        $pages = array();
+    
+        foreach($fanpages as $key => $fanpage) {
+            
+            $single = array_map(function($i) {
+                return rtrim(ltrim($i, " "), " ");
+            }, explode('::', $fanpage));
+            $pages[$single[0]] = $single[1];
+        }
+    
+        return $pages;
+    }
+    return 0;
+}

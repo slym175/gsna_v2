@@ -250,13 +250,13 @@ if(!class_exists("GsSettingsPage")) {
                     'parent'        => 'gs_options', // Option name
                     'id'            => 'fanpage_url', // Field ID
                     'class'         => 'regular-text one-line', // Field ID
-                    'type'          => 'input', // Field Type
+                    'type'          => 'textarea', // Field Type
                     'subtype'       => 'text', // Field Subtype
                     'name'          => 'fanpage_url', // Field Name
-                    'description'   => '',
+                    'description'   => __('Mỗi page viết cách nhau 1 dấu ";" -- VD: Hà Nội :: *page_url*; Hà Nam :: *page_url*;...', GS_TEXTDOMAIN),
                     'options'       => array(
                         'required'  => true,
-                        // 'rows'      => 5
+                        'rows'      => 5
                     )
                 ) // Callback Arguments          
             );

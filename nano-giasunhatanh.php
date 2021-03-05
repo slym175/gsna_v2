@@ -468,6 +468,8 @@ function wpdocs_run_on_transition_only( $new_status, $old_status, $post ) {
         $classnoty->setClassroomID($post->ID);
         $invalid_tutors = $classnoty->getTutors();
         // write_log($invalid_tutors);
+
+        $classnoty = Noty_Sender::getInstance();
     } else {
         return;
     }

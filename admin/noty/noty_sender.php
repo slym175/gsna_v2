@@ -22,14 +22,24 @@ if(!class_exists('Noty_Sender')) {
             return self::$instance;
         }
 
-        public function sendMail($message)
+        public function sendMail(...$arguments)
         {
-            # code...
-            $mailResult = false;
-            $to = "thuyhu9876@gmail.com";
-            $subject = 'GỬI TỪ QUANG TRUNG';
+            // $arguments[0] : $classroom_id (Mã lớp học gửi đi)
+            // $arguments[1] : $to (Danh sách người nhận)
+            // $arguments[2] : $subject (Tiêu đề mail)
+            // $arguments[3] : $message (Nội dung mail)
+
+            $result = false;
+            $to = 'thuyhu9876@gmail.com';
+            $subject = 'GỬI TỪ GIA SƯ NHẬT ANH';
             $headers = array('Content-Type: text/html; charset=UTF-8');
-            
+            $message = 'Có lớp mới được đăng tải. Ghé thăm ' . get_bloginfo('url') . ' để tìm hiểu thêm.';
+            if(is_array($arguments) && $arguments) {
+                $to = isset($arguments[1]) ? (is_array($arguments[1]) ? implode(',', $arguments[1]) : $arguments[1]) : $to;
+                $subject = isset($arguments[2]) ? $arguments[2] : $subject;
+                $message = isset($arguments[3]) ? $this->generateMessage( $arguments[3], isset($arguments[0]) ? $arguments[0] : 0 ) : $message;
+            }
+
             $mailResult = wp_mail( $to, $subject, $message, $headers );
 
             if($mailResult == false) {
@@ -39,9 +49,18 @@ if(!class_exists('Noty_Sender')) {
             return $this->sendNotyResponse(true, 'Gửi tin nhắn thành công', $message);
         }
 
-        public function sendSMS($message)
+        public function sendSMS(...$arguments)
         {
-            
+            // $arguments[0] : $classroom_id (Mã lớp học gửi đi)
+            // $arguments[1] : $to (Danh sách người nhận)
+            // $arguments[2] : $message (Nội dung mail)
+            $result = false;
+            $to = '+84986114671';
+            $message = 'Có lớp mới được đăng tải. Ghé thăm ' . get_bloginfo('url') . ' để tìm hiểu thêm.';
+            if(is_array($arguments) && $arguments) {
+                $to = isset($arguments[1]) ? (is_array($arguments[1]) ? implode(',', $arguments[1]) : $arguments[1]) : $to;
+                $message = isset($arguments[2]) ? $this->generateMessage( $arguments[2], isset($arguments[0]) ? $arguments[0] : 0 ) : $message;
+            }
         }
 
         private function sendNotyResponse($status = true, $message = '', $data = '')

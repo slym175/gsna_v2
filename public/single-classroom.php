@@ -169,8 +169,8 @@ get_header();
                 <p style="margin-bottom: 6px; margin-top: 30px">Liên hệ fanpage để được hướng dẫn</p>
                 <div>
                     <?php if( fanpageURLArray() && is_array(fanpageURLArray()) ) : foreach(fanpageURLArray() as $key => $page) : ?>
-                        <a style="word-break: break-word;" href="<?= wp_is_mobile() ? str_replace(['https://www.facebook.com/'], 'fb://page?id=', $page) : $page ?>"><?= $key ?></a> 
-                        <?= end(fanpageURLArray()) == $page ? "" : " - " ?>
+                        <a style="word-break: break-word;" href="<?= $page ?>"><?= $key ?></a> 
+                        <?= array_key_last(fanpageURLArray()) == $key ? "" : " - " ?>
                     <?php endforeach; endif ?>
                 </div>
             <?php endif ?>

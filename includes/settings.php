@@ -230,7 +230,7 @@ if(!class_exists("GsSettingsPage")) {
                     'id'            => 'google_api_key', // Field ID
                     'class'         => 'regular-text one-line', // Field ID
                     'type'          => 'input', // Field Type
-                    'subtype'       => 'text', // Field Subtype
+                    'subtype'       => 'password', // Field Subtype
                     'name'          => 'google_api_key', // Field Name
                     'description'   => '',
                     'options'       => array(
@@ -250,13 +250,62 @@ if(!class_exists("GsSettingsPage")) {
                     'parent'        => 'gs_options', // Option name
                     'id'            => 'fanpage_url', // Field ID
                     'class'         => 'regular-text one-line', // Field ID
-                    'type'          => 'input', // Field Type
+                    'type'          => 'textarea', // Field Type
                     'subtype'       => 'text', // Field Subtype
                     'name'          => 'fanpage_url', // Field Name
-                    'description'   => '',
+                    'description'   => __('Mỗi page viết cách nhau 1 dấu ";" -- VD: Hà Nội :: *page_url*; Hà Nam :: *page_url*;...', GS_TEXTDOMAIN),
                     'options'       => array(
                         'required'  => true,
+                        'rows'      => 5
+                    )
+                ) // Callback Arguments          
+            );
+
+            add_settings_section(
+                'gs_noty_setting_section', // ID
+                'Gửi thông báo gia sư', // Title
+                '', // Callback
+                'gs-settings' // Page
+            );
+
+            add_settings_field(
+                'wemap_key', // ID
+                'WeMap API Key', // Title 
+                array( $this, 'gs_render_settings_field' ), // Callback
+                'gs-settings', // Page
+                'gs_noty_setting_section', // Section 
+                array (
+                    'parent'        => 'gs_options', // Option name
+                    'id'            => 'wemap_key', // Field ID
+                    'class'         => 'regular-text one-line', // Field ID
+                    'type'          => 'input', // Field Type
+                    'subtype'       => 'password', // Field Subtype
+                    'name'          => 'wemap_key', // Field Name
+                    'description'   => '',
+                    'options'       => array(
+                        //'required'  => true,
                         // 'rows'      => 5
+                    )
+                ) // Callback Arguments          
+            );
+
+            add_settings_field(
+                'classroom_publish_noty', // ID
+                'Nội dung tin nhắn', // Title 
+                array( $this, 'gs_render_settings_field' ), // Callback
+                'gs-settings', // Page
+                'gs_noty_setting_section', // Section 
+                array (
+                    'parent'        => 'gs_options', // Option name
+                    'id'            => 'classroom_publish_noty', // Field ID
+                    'class'         => 'regular-text one-line', // Field ID
+                    'type'          => 'textarea', // Field Type
+                    'subtype'       => 'text', // Field Subtype
+                    'name'          => 'classroom_publish_noty', // Field Name
+                    'description'   => __('Nội dung tin nhắn có thể dùng các thông tin động như: {tutor_name}, {class_name}, {class_address}, {class_schedule}, {site_url}, {site_name}', GS_TEXTDOMAIN),
+                    'options'       => array(
+                        // 'required'  => true,
+                        'rows'      => 5
                     )
                 ) // Callback Arguments          
             );
@@ -273,6 +322,8 @@ if(!class_exists("GsSettingsPage")) {
                 case 'input':
                     switch($args['subtype']){
                         case 'text':
+                        case 'password':
+                        case 'number' :
                             printf(
                                 '<input type="%1$s" class="%2$s" id="%3$s" name="%4$s" %5$s value="%6$s" />',
                                 $args['subtype'],
@@ -280,7 +331,7 @@ if(!class_exists("GsSettingsPage")) {
                                 $args['id'],
                                 $field_name,
                                 $field_options,
-                                sanitize_text_field( isset( $this->options[$args['id']] ) ? esc_attr( $this->options[$args['id']]) : '' )
+                                $args['subtype'] == 'number' ? intval( isset( $this->options[$args['id']] ) ? esc_attr( $this->options[$args['id']]) : '' ) : sanitize_text_field( isset( $this->options[$args['id']] ) ? esc_attr( $this->options[$args['id']]) : '' )
                             );
                             printf('<p>%1$s</p>', $args['description']);
                             break;

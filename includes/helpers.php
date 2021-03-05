@@ -58,6 +58,17 @@ function get_registration_classroom_count($classroom)
     return $wpdb->num_rows;
 }
 
+function get_unseen_registration_classroom_count()
+{
+    global $wpdb;
+    $table_name = $wpdb->prefix."gs_user_classrooms";
+
+    $wpdb->get_results(" SELECT * FROM " . $table_name . " WHERE is_seen = 0" ); 
+
+    return $wpdb->num_rows;
+}
+
+
 function get_classroom_code($post_id)
 {
     echo "CR-" . $post_id;
@@ -1110,64 +1121,15 @@ function remove_registration_classroom()
 
 function isTutorCompletedProfile($user_id) : bool
 {
-    // update_user_meta($userId, 'user_gender', $_REQUEST['user_gender']);
-    // update_user_meta($userId, 'user_phone', $_REQUEST['user_phone']);
-    // update_user_meta($userId, 'user_train_province', $_REQUEST['user_train_province']);
-    // update_user_meta($userId, 'user_train_district', $_REQUEST['user_train_district']);
-    // update_user_meta($userId, 'user_address', $_REQUEST['user_address']);
-
-    // update_user_meta($userId, 'user_tutor_exp', $_REQUEST['user_tutor_exp']);
-    // update_user_meta($userId, 'user_tutor_awards', $_REQUEST['user_tutor_awards']);
-
-    // update_user_meta($userId, 'user_prof_role', $_REQUEST['user_prof_role']);
-    // update_user_meta($userId, 'user_prof_format', $_REQUEST['user_prof_format']);
-    // update_user_meta($userId, 'user_prof_price', $_REQUEST['user_prof_price']);
-    // update_user_meta($userId, 'user_prof_subject', $_REQUEST['user_prof_subject']);
-    // update_user_meta($userId, 'user_prof_classes', $_REQUEST['user_prof_classes']);
-    // update_user_meta($userId, 'user_prof_schedule', $_REQUEST['user_prof_schedule']);
-
-    // $old = get_the_author_meta( 'user_prof_schedule', $post_id );
-    // $new = array();
-
-    // $schedule = isset($_POST['user_schedule_day']) ? $_POST['user_schedule_day'] : "";
-    // $start_date = isset($_POST['user_schedule_start']) ? $_POST['user_schedule_start'] : "";
-    // $end_date = isset($_POST['user_schedule_end']) ? $_POST['user_schedule_end'] : "";
-
-    // $count = count($schedule);
-
-    // for ($i = 0; $i < $count; $i++) {
-    //     if ($schedule[$i] != '') :
-    //         $new[$i]['user_schedule_day'] = stripslashes(strip_tags($schedule[$i]));
-    //         $new[$i]['user_schedule_start'] = stripslashes(strip_tags($start_date[$i]));
-    //         $new[$i]['user_schedule_end'] = stripslashes(strip_tags($end_date[$i]));
-    //     endif;
-    // }
-
-    // if (!empty($new) && $new != $old)
-    //     update_user_meta($userId, 'user_prof_schedule', $new);
-    // elseif (empty($new) && $old)
-    //     delete_user_meta($userId, 'user_prof_schedule', $old);
-
-    // $up_dir = GS_UPLOAD_DIR."/".$userId;
-    // if (! is_dir($up_dir)) {
-    //     mkdir( $up_dir, 0700 );
-    // }
-
-    // $user_prof_id_card = self::uploadSimple($up_dir, $_FILES['user_prof_id_card'], get_the_author_meta( 'user_prof_id_card', $userId ));
-    // update_user_meta($userId, 'user_prof_id_card', $user_prof_id_card);
-
-    // $user_prof_certificate = self::uploadSimple($up_dir, $_FILES['user_prof_certificate'], get_the_author_meta( 'user_prof_certificate', $userId ));
-    // update_user_meta($userId, 'user_prof_certificate', $user_prof_certificate);
-
-    // $user_prof_activation = self::uploadSimple($up_dir, $_FILES['user_prof_activation'], get_the_author_meta( 'user_prof_activation', $userId ));
-    // update_user_meta($userId, 'user_prof_activation', $user_prof_activation);
-
-    // update_user_meta($userId, 'user_prof_intro_video', $_REQUEST['user_prof_intro_video']);
-    if( !get_the_author_meta('user_phone', $user_id) || get_the_author_meta('user_phone', $user_id) == "") {
+    if( !get_field('user_prof_avatar', 'user_'. $user_id) ) {
         return false;
     }
 
-    if( !get_the_author_meta('user_birth', $user_id) || get_the_author_meta('user_birth', $user_id) == "") {
+    if( !get_the_author_meta('user_phone', $user_id) ) {
+        return false;
+    }
+
+    if( !get_the_author_meta('user_birth', $user_id) ) {
         return false;
     }
 
@@ -3076,4 +3038,40 @@ function get_districts_locations()
     }
 
     die;
+}
+
+function fanpageURLArray()
+{
+    if(get_option('gs_options')['fanpage_url']) {
+        $fanpages = array_map(function($item) {
+            return rtrim(ltrim($item, " "), " ");
+        }, explode(';', get_option('gs_options')['fanpage_url']));
+    
+        $pages = array();
+    
+        foreach($fanpages as $key => $fanpage) {
+            
+            $single = array_map(function($i) {
+                return rtrim(ltrim($i, " "), " ");
+            }, explode('::', $fanpage));
+            $pages[$single[0]] = $single[1];
+        }
+    
+        return $pages;
+    }
+    return 0;
+}
+
+if (!function_exists('write_log')) {
+
+    function write_log($log) {
+        if (true === WP_DEBUG) {
+            if (is_array($log) || is_object($log)) {
+                error_log(print_r($log, true));
+            } else {
+                error_log($log);
+            }
+        }
+    }
+
 }

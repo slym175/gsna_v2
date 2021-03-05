@@ -28,6 +28,8 @@ function removeRow(el) {
 }
 
 jQuery(document).ready(function () {
+    jQuery('.username.column-username img').removeAttr( "srcset" );
+    jQuery('.user-profile-picture img').removeAttr( "srcset" );
     jQuery('#gs_status').change(function (e) { 
         e.preventDefault();
         jQuery.ajax({

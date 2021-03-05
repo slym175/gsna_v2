@@ -14,7 +14,7 @@ function tutor_register_classroom_action () {
     $user_data = get_user_by( 'ID', $user );
 	
 	if(is_user_logged_in()) {
-        if(isTutorCompletedProfile($user_data)) {
+        if(isTutorCompletedProfile($user)) {
             if(!isTutorSendedRequest($user, $class)) {
                 $roles = ( array ) $user->roles;
                 $wpdb->insert( 
@@ -46,9 +46,10 @@ function tutor_register_classroom_action () {
             }
             echo __('Đã đăng ký lớp trước đó', GS_TEXTDOMAIN); die;
         }else{
-            printf('<a class="edit-account" href="%1$s">%2$s</a>',
+            printf('<p>%1$s</p><a class="edit-account" href="%2$s">%3$s</a>',
+                __('Cập nhật đầy đủ hồ sơ gia sư trước khi nhận lớp', GS_TEXTDOMAIN),
                 wc_customer_edit_account_url(),
-                __('Cập nhật đầy đủ hồ sơ gia sư trước khi nhận lớp', GS_TEXTDOMAIN)
+                __('Hồ sơ của bạn', GS_TEXTDOMAIN)
             ); die;
         }
     }else{

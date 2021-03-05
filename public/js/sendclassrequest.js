@@ -1,4 +1,9 @@
 jQuery(document).ready(function () {
+    initCheckList('#filter-subject');
+    initCheckList('#filter-caphoc');
+    initCheckList('#filter-formats');
+    getProvinceChecked();
+
     jQuery('.btn-gs-classroom').click(function (e) {
         e.preventDefault();
 
@@ -38,57 +43,25 @@ jQuery(document).ready(function () {
         });
     });
 
+    jQuery('.filter-actions-button.filter-actions__select').click(function (e) { 
+        jQuery(this).parents('.filter-menu').find('.filter-menu-list:not(.d-none) input[type="checkbox"]').prop('checked', true)
+
+        var text = jQuery(this).parents('.filter-parent').find('.filter-menu-list').data('name');
+        var count = jQuery(this).parents('.filter-parent').find('.filter-menu-list').find('input[type="checkbox"]:checked').length
+        jQuery(this).parents('.filter-parent').find('.filter-notice').empty().html('Đã chọn ' + count +' '+ text)
+    });
+
+    jQuery('.filter-actions-button.filter-actions__delete').click(function (e) { 
+        jQuery(this).parents('.filter-menu').find('.filter-menu-list:not(.d-none) input[type="checkbox"]').prop('checked', false)
+
+        var text = jQuery(this).parents('.filter-parent').find('.filter-menu-list').data('name');
+        jQuery(this).parents('.filter-parent').find('.filter-notice').empty().text('Chọn ' + text)
+    });
+
     jQuery('.gs-popup-classroom .contents i.fa.fa-times').click(function(e) {
         e.preventDefault();
         jQuery('.gs-popup-classroom').addClass('d-none')
     })
-
-    // jQuery('#filter_province').select2({
-    //     data: jQuery.parseJSON(request_data.local_address),
-    //     placeholder: 'Tỉnh/thành phố'
-    // })
-
-    // jQuery('#filter_district').select2({
-    //     data: jQuery.parseJSON(request_data.local_address)[0].district,
-    //     placeholder: 'Quận/huyện'
-    // })
-
-    // jQuery('#filter_province').on('change',function(){
-    //     var thisval = jQuery(this).val();
-    //     var dvls_city = jQuery.parseJSON(request_data.local_address);
-    //     var distr = "";
-    //     for (x in dvls_city) {
-    //         if (dvls_city[x].text == thisval) {
-    //             dvls_city[x].selected = true;
-    //             distr = dvls_city[x].district;
-    //         }
-    //     }
-    //     jQuery('#filter_district').empty()
-    //     jQuery('#filter_district').select2({
-    //         data: distr,
-    //         allowClear: true
-    //     })
-    // });
-
-    // jQuery("#filter_subject").select2({
-    //     placeholder: 'Môn học',
-    //     data: jQuery.parseJSON(request_data.subjects)
-    // });
-
-    // jQuery("#filter_caphoc").select2({
-    //     data: jQuery.parseJSON(request_data.caphoc),
-    //     placeholder: 'Cấp học',
-    // });
-
-    // jQuery("#filter_target").select2({
-    //     placeholder: 'Đối tượng',
-    //     data: jQuery.parseJSON(request_data.targets)
-    // });
-
-    // jQuery("#filter_formats").select2({
-    //     placeholder: 'Hình thức học',
-    //     data: jQuery.parseJSON(request_data.formats)
-    // });
 
     jQuery('.filter-title').click(function (e) {
         e.preventDefault();
@@ -117,12 +90,13 @@ jQuery(document).ready(function () {
         var text = jQuery(this).parents('.filter-menu-list').data('name');
         var count = jQuery(this).parents('.filter-menu-list').find('input[type="checkbox"]:checked').length
 
-        // console.log(text)
-        // console.log(count)
-
         if(jQuery(this).parents('.filter-parent').hasClass('single')) {
-            jQuery(this).parents('.filter-parent').find('input[type="checkbox"]:checked').prop( "checked", false )
-            jQuery(this).prop( "checked", true )
+            jQuery(this).parents('.filter-parent').find('input[type="checkbox"]:checked').not( jQuery(this) ).prop( "checked", false )
+            // if(jQuery(this).prop( ":checked", true)) {
+            //     jQuery(this).prop( "checked", false)
+            // }else{
+            //     jQuery(this).prop( "checked", true)
+            // }
             jQuery(this).parents('.filter-parent').find('.filter-notice').empty().html('Chọn ' + jQuery(this).val())
             var key = jQuery(this).data('key')
             jQuery( "#filter-district .filter-menu-list" ).each(function() {
@@ -133,45 +107,69 @@ jQuery(document).ready(function () {
                 }
             });
         } else {
-            if(count == 0) {
+            if(count <= 0) {
                 jQuery(this).parents('.filter-parent').find('.filter-notice').empty().html('Chọn ' +text)
             }else{
                 jQuery(this).parents('.filter-parent').find('.filter-notice').empty().html('Đã chọn ' + count +' '+ text)
             }
         }
     });
-
 });
+
+
 
 jQuery('#filter-district input[type="checkbox"]').change(function() {
     console.log(jQuery(this))
     var text = jQuery(this).parents('.filter-menu-list').data('name');
     var count = jQuery(this).parents('.filter-menu-list').find('input[type="checkbox"]:checked').length
-    if(count == 0) {
+    if(count <= 0) {
         jQuery(this).parents('.filter-parent').find('.filter-notice').empty().html('Chọn ' + text)
     }else{
         jQuery(this).parents('.filter-parent').find('.filter-notice').empty().html('Đã chọn ' + count +' '+ text)
     }
 });
 
-// function submitFormFilter(el) {
-//     jQuery.ajax({
-//         type: "POST",
-//         url: request_data.ajax_url,
-//         data: {
-//             'action' : "classroom_filter",
-//             'filter_province'   : jQuery('#filter_province').val(),
-//             'filter_district'   : jQuery('#filter_district').val(),
-//             'filter_subject'    : jQuery('#filter_subject').val(),
-//             'filter_theme'      : jQuery('#filter_theme').val(),
-//             'filter_target'     : jQuery('filter_target').val()
-//         },
-//         dataType: 'json',
-//         success: function (response) {
-//             console.log(response);
-//         },
-//         error: function (error) {
-//             console.log(error);
-//         }
-//     });
-// }
+function initCheckList(id) {
+    var count = jQuery(id + ' input[type="checkbox"]:checked').length
+    if(count <= 0) {
+        var text = jQuery(id + ' input[type="checkbox"]:checked').parents('.filter-menu-list').data('name');
+        jQuery(id + ' input[type="checkbox"]:checked').parents('.filter-parent').find('.filter-notice').empty().text('Chọn ' + text)
+    }else{
+        var text = jQuery(id + ' input[type="checkbox"]:checked').parents('.filter-menu-list').data('name');
+        jQuery(id + ' input[type="checkbox"]:checked').parents('.filter-parent').find('.filter-notice').empty().text('Đã chọn ' + count +' '+ text)
+    }
+
+    if(jQuery(id + ' input[type="checkbox"]:checked').length == jQuery(id + ' input[type="checkbox"]').length) {
+        jQuery(id + ' input[type="checkbox"]').parents('.filter-parent').find('.filter-actions-button.filter-actions__select').empty().text('Xóa tất cả')
+    }
+}
+
+function getProvinceChecked() {
+    var filter_province = jQuery('#filter-province input[type="checkbox"]:checked')
+
+    if(filter_province.length > 0) {
+        var text = filter_province.parents('.filter-menu-list').data('name');
+        var count = filter_province.parents('.filter-menu-list').find('input[type="checkbox"]:checked').length
+
+        if(filter_province.parents('.filter-parent').hasClass('single')) {
+            filter_province.parents('.filter-parent').find('input[type="checkbox"]:checked').prop( "checked", false )
+            filter_province.prop( "checked", true )
+            filter_province.parents('.filter-parent').find('.filter-notice').empty().html('Chọn ' + filter_province.val())
+            var key = filter_province.data('key')
+            jQuery( "#filter-district .filter-menu-list" ).each(function() {
+                if(key == jQuery(this).data('pkey')) {
+                    jQuery(this).removeClass( "d-none" );
+                    initCheckList('#filter-district');
+                }else{
+                    jQuery(this).addClass( "d-none" );
+                }
+            });
+        } else {
+            if(count <= 0) {
+                filter_province.parents('.filter-parent').find('.filter-notice').empty().html('Chọn ' +text)
+            }else{
+                filter_province.parents('.filter-parent').find('.filter-notice').empty().html('Đã chọn ' + count +' '+ text)
+            }
+        }
+    }
+}

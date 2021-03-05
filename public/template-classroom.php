@@ -15,20 +15,20 @@ $filter_caphoc = isset($_REQUEST['filter_caphoc']) && $_REQUEST['filter_caphoc']
 // $filter_target = isset($_REQUEST['filter_target']) && $_REQUEST['filter_target'] != "0" ? $_REQUEST['filter_target'] : "";
 $filter_formats = isset($_REQUEST['filter_formats']) && $_REQUEST['filter_formats'] != "0" ? $_REQUEST['filter_formats'] : "";
 
-$keywords = isset($_REQUEST['keywords']) ? $_REQUEST['keywords'] : "";
+$meta_query = [];
+$meta_query['relation'] = 'OR';
 
-// echo "Tinh";
-// print_r($filter_province );
-// echo "<br>Huyen";
-// print_r($filter_district);
-// echo "<br>Mon";
-// print_r($filter_subject );
-// echo "<br>Cap hoc";
-// print_r($filter_caphoc );
-// echo "<br>Muc tieu";
-// print_r($_REQUEST['filter_target'] );
-// echo "<br>Hinh thuc";
-// print_r($filter_formats );
+if($filter_district != "" && is_array($filter_district)) {
+    foreach ( $filter_district as $district ) {
+        $meta_query[] = [
+            'key'     => 'class_address',
+            'value'   => preg_replace('/Quận |Huyện /', '', $district),
+            'compare' => 'LIKE',
+        ];
+    }
+}
+
+$keywords = isset($_REQUEST['keywords']) ? $_REQUEST['keywords'] : "";
 
 if($keywords != "") {
     $args = array(
@@ -64,23 +64,11 @@ if($keywords != "") {
                 'compare'   => "=",
             ),
             array(
-                'relation'      => 'OR',
+                'relation'      => 'AND',
                 $filter_caphoc != "" ?
                 array(
                     'key'       => 'class_caphoc',
                     'value'     => $filter_caphoc,
-                    'compare'   => 'IN',
-                ) : '',
-                $filter_province != "" ?
-                array(
-                    'key'       => 'class_address',
-                    'value'     => $filter_province,
-                    'compare'   => 'LIKE',
-                ) : '',
-                $filter_district != "" ?
-                array(
-                    'key'       => 'class_address',
-                    'value'     => $filter_district,
                     'compare'   => 'IN',
                 ) : '',
                 $filter_formats != "" ?
@@ -88,8 +76,19 @@ if($keywords != "") {
                     'key'       => 'class_format',
                     'value'     => $filter_formats,
                     'compare'   => 'IN',
-                ) : ''
-            )
+                ) : '',
+                $filter_province != "" ? (
+                    $filter_district == "" ?
+                    array(
+                        'key'       => 'class_address',
+                        'value'     => $filter_province,
+                        'compare'   => 'LIKE',
+                    ) : ''
+                ) : '',
+                
+            ),
+            $filter_district != "" ?
+            $meta_query : '',
         )
     );
 }
@@ -99,7 +98,13 @@ $classrooms = new WP_Query($args);
 
 ?>
 
-<?php //echo "<pre>"; print_r($classrooms); echo "</pre>"; ?>
+<?php 
+    if(isset($_GET['fix'])) {
+        echo "<pre>";
+        print_r( $args );
+        echo "</pre>";
+    }
+?>
 
 <?php do_action( 'flatsome_before_blog' ); ?>
 
@@ -129,32 +134,8 @@ $classrooms = new WP_Query($args);
         <div class="col small-12">
             <h5 class="text-primary"><i class="fa fa-filter" aria-hidden="true"></i> Bộ lọc</h5>
             <form action="" method="GET" class="form-filter">
-                <!-- <select name="filter_subject" id="filter_subject">
-
-                </select>
-                <select name="filter_province" id="filter_province">
-
-                </select>
-                <select name="filter_district" id="filter_district">
-
-                </select>
-                <select name="filter_target" id="filter_target">
-
-                </select>
-                <select name="filter_caphoc" id="filter_caphoc">
-
-                </select>
-                <select name="filter_formats" id="filter_formats">
-
-                </select> -->  
-                <?php 
-                // echo "<pre>";
-                // print_r(get_provinces_locations()); 
-                // echo "</pre>";
-                ?>
-
                 <?php $terms = getSubjectNoParent(); ?>
-                <div class="filter-parent">
+                <div class="filter-parent" id="filter-subject">
                     <div class="filter-title">
                         <span class="filter-notice">Chọn môn học</span>
                     </div>
@@ -163,18 +144,22 @@ $classrooms = new WP_Query($args);
                             <?php foreach($terms as $term) : ?>
                                 <div>
                                     <div class="form-check mb-2">
-                                        <input type="checkbox" name="filter_subject[]" value="<?= $term->term_id ?>" id="subject<?= $term->term_id ?>">
+                                        <input type="checkbox" <?= isset($_REQUEST['filter_subject']) && in_array($term->term_id, $_REQUEST['filter_subject']) ? 'checked' : '' ?> name="filter_subject[]" value="<?= $term->term_id ?>" id="subject<?= $term->term_id ?>">
                                         <label for="subject<?= $term->term_id ?>" class="checkmark"><?= $term->name ?></label>
                                     </div>
                                 </div>
                             <?php endforeach ?>
                         </div>
-                    </div>
+                        <div class="filter-actions">
+                            <span class="filter-actions-button filter-actions__select">Chọn tất cả</span>
+                            <span class="filter-actions-button filter-actions__delete">Xóa tất cả</span>
+                        </div>
+                    </div> 
                 </div>
 
                 <?php $provinces = get_provinces_locations(); ?>
                 
-                <div class="filter-parent single">
+                <div class="filter-parent single" id="filter-province">
                     <div class="filter-title">
                         <span class="filter-notice">Chọn tỉnh/thành</span>
                     </div>
@@ -183,7 +168,7 @@ $classrooms = new WP_Query($args);
                             <?php foreach($provinces as $key => $province) : ?>
                                 <div>
                                     <div class="form-check mb-2">
-                                        <input type="checkbox" data-key="<?= $province['id'] ?>" name="filter_province" value="<?= $province['text'] ?>" id="province<?= $key ?>">
+                                        <input type="checkbox" <?= isset($_REQUEST['filter_province']) && $province['text'] == $_REQUEST['filter_province'] ? 'checked' : '' ?> data-key="<?= $province['id'] ?>" name="filter_province" value="<?= $province['text'] ?>" id="province<?= $key ?>">
                                         <label for="province<?= $key ?>" class="checkmark"><?= $province['text'] ?></label>
                                     </div>
                                 </div>
@@ -202,20 +187,24 @@ $classrooms = new WP_Query($args);
                                 <?php foreach($provinces[$key]['district'] as $k => $district) : ?>
                                     <div class="district-display">
                                         <div class="form-check mb-2">
-                                            <input type="checkbox" name="filter_district" value="<?= $district['text'] ?>" id="district<?= $provinces[$key]['id'] ?><?= $k ?>">
+                                            <input type="checkbox" <?= isset($_REQUEST['filter_district']) && in_array($district['text'], $_REQUEST['filter_district']) ? 'checked' : '' ?> name="filter_district[]" value="<?= $district['text'] ?>" id="district<?= $provinces[$key]['id'] ?><?= $k ?>">
                                             <label for="district<?= $provinces[$key]['id'] ?><?= $k ?>" class="checkmark"><?= $district['text'] ?></label>
                                         </div>
                                     </div>
                                 <?php endforeach ?>
                             </div>
                         <?php endforeach ?>
+                        <div class="filter-actions">
+                            <span class="filter-actions-button filter-actions__select">Chọn tất cả</span>
+                            <span class="filter-actions-button filter-actions__delete">Xóa tất cả</span>
+                        </div>
                     </div>
                 </div>
 
                 <?php $caphocs = array_map(function($item) {
                         return rtrim(ltrim($item, " "), " ");
                     }, explode(';', get_option('gs_options')['class_caphoc'])); ?>
-                <div class="filter-parent">
+                <div class="filter-parent" id="filter-caphoc">
                     <div class="filter-title">
                         <span class="filter-notice">Chọn cấp học</span>
                     </div>
@@ -224,11 +213,15 @@ $classrooms = new WP_Query($args);
                             <?php foreach($caphocs as $key => $caphoc) : ?>
                                 <div>
                                     <div class="form-check mb-2">
-                                        <input type="checkbox" name="filter_caphoc[]" value="<?= $caphoc ?>" id="caphoc<?= $key ?>">
+                                        <input type="checkbox" <?= isset($_REQUEST['filter_caphoc']) && in_array($caphoc, $_REQUEST['filter_caphoc']) ? 'checked' : '' ?> name="filter_caphoc[]" value="<?= $caphoc ?>" id="caphoc<?= $key ?>">
                                         <label for="caphoc<?= $key ?>" class="checkmark"><?= $caphoc ?></label>
                                     </div>
                                 </div>
                             <?php endforeach ?>
+                        </div>
+                        <div class="filter-actions">
+                            <span class="filter-actions-button filter-actions__select">Chọn tất cả</span>
+                            <span class="filter-actions-button filter-actions__delete">Xóa tất cả</span>
                         </div>
                     </div>
                 </div>
@@ -236,7 +229,7 @@ $classrooms = new WP_Query($args);
                 <?php $formats = array_map(function($item) {
                         return rtrim(ltrim($item, " "), " ");
                     }, explode(';', get_option('gs_options')['tutor_formats'])); ?>
-                <div class="filter-parent">
+                <div class="filter-parent" id="filter-formats">
                     <div class="filter-title">
                         <span class="filter-notice">Chọn hình thức học</span>
                     </div>
@@ -245,11 +238,15 @@ $classrooms = new WP_Query($args);
                             <?php foreach($formats as $key => $format) : ?>
                                 <div>
                                     <div class="form-check mb-2">
-                                        <input type="checkbox" name="filter_formats[]" value="<?= $format ?>" id="format<?= $key ?>">
+                                        <input type="checkbox" <?= isset($_REQUEST['filter_formats']) && in_array($format, $_REQUEST['filter_formats']) ? 'checked' : '' ?> name="filter_formats[]" value="<?= $format ?>" id="format<?= $key ?>">
                                         <label for="format<?= $key ?>" class="checkmark"><?= $format ?></label>
                                     </div>
                                 </div>
                             <?php endforeach ?>
+                        </div>
+                        <div class="filter-actions">
+                            <span class="filter-actions-button filter-actions__select">Chọn tất cả</span>
+                            <span class="filter-actions-button filter-actions__delete">Xóa tất cả</span>
                         </div>
                     </div>
                 </div>
@@ -301,6 +298,10 @@ $classrooms = new WP_Query($args);
                         <?php if( get_post_meta( get_the_ID(  ), 'class_target', true ) ) { ?>
                         <p class="class_target"><i class="fa fa-bookmark-o"
                                 aria-hidden="true"></i><?= __('Yêu cầu: ', GS_TEXTDOMAIN) ?><?= get_post_meta( get_the_ID(  ), 'class_target', true ) ?>
+                        </p>
+                        <?php } ?>
+                        <?php if( get_post_meta( get_the_ID(  ), 'class_gender', true ) ) { $array_gt = array("Nam", "Nữ", "Không yêu cầu"); ?>
+                        <p class="class_target"><i class="fa fa-transgender" aria-hidden="true"></i><?= __('Giới tính: ', GS_TEXTDOMAIN) ?><?= $array_gt[get_post_meta( get_the_ID(  ), 'class_gender', true )] ?>
                         </p>
                         <?php } ?>
 

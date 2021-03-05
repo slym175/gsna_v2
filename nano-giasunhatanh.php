@@ -3,7 +3,7 @@
  * Plugin Name:       GiaSuNhatAnh Classroom
  * Plugin URI:        http://nanoweb.vn/
  * Description:       Quản trị khóa học, gia sư
- * Version:           1.2.0
+ * Version:           1.2.1
  * Author:            NanoWeb && thuyhu9876@gmail.com
  * Author URI:        http://nanoweb.vn/
  * License:           GPL v2 or later
@@ -30,8 +30,8 @@ if ( ! defined( 'GS_PLUGIN_DIR_ROOT' ) ) {
 
 if ( ! defined( 'GS_STATUS' ) ) {
     define( 'GS_STATUS', array(
-        'confirmed' => __('Confirmed', GS_TEXTDOMAIN),
-        'pending'   => __('Pending', GS_TEXTDOMAIN)
+        'confirmed' => __('Đã xác nhận', GS_TEXTDOMAIN),
+        'pending'   => __('Chờ xác nhận', GS_TEXTDOMAIN)
     ));
 }
 
@@ -57,6 +57,9 @@ if(!class_exists('GiaSuNhatAnh')) {
             }
 
             add_role( 'tutor', __('Gia sư', GS_TEXTDOMAIN), get_role( 'customer' )->capabilities );
+            $tutor = get_role('tutor');
+            $tutor->add_cap('upload_files');
+            add_action('after_setup_theme', array( $this, 'remove_admin_bar' ));
             update_option( 'woocommerce_registration_generate_username', 'no');
             update_option( 'woocommerce_registration_generate_password', 'no');
             add_filter ( 'woocommerce_account_menu_items', 'misha_remove_my_account_links' );
@@ -74,16 +77,17 @@ if(!class_exists('GiaSuNhatAnh')) {
             add_action( 'wp_enqueue_scripts', array($this, 'public_enqueue_scripts_loader') );
             add_filter( 'template_include', 'single_classroom_templates' );
 
-            // remove_menu_page('woocommerce');
-
+            if(!is_admin()) {
+                add_action( 'admin_footer-post-new.php', 'cc_media_default' );
+                add_action( 'admin_footer-post.php', 'cc_media_default' );
+            }
             require_once GS_PLUGIN_DIR . "/public/templates_loader.php";
             require_once GS_PLUGIN_DIR . "/public/custom_user_profile.php";
             require_once GS_PLUGIN_DIR . "/public/classroom_button.php";
             require_once GS_PLUGIN_DIR . "/public/classroom_filter.php";
-            // add_action( 'flatsome_before_blog' , 'get_flatsome_blog_breadcrumbs', 20 );
-            // add_action( 'flatsome_before_page' , 'get_flatsome_blog_breadcrumbs', 20 );
-            // add_action( 'flatsome_before_page_content' , 'get_flatsome_blog_breadcrumbs', 20 );
-            // add_filter( 'posts_where', 'title_filter', 10, 2 );
+
+            require_once GS_PLUGIN_DIR . "/admin/noty/class_classroom_notify_helper.php";
+            require_once GS_PLUGIN_DIR . "/admin/noty/noty_sender.php";
         }
 
         public static function init()
@@ -93,11 +97,30 @@ if(!class_exists('GiaSuNhatAnh')) {
         }
 
         public static function add_admin_plugin_setting_menu() {
-    
-            //add_submenu_page( '$parent_slug, $page_title, $menu_title, $capability, $menu_slug, $function );
-            $hook = add_submenu_page( 'edit.php?post_type=classroom', __('Quản lý nhận lớp', GS_TEXTDOMAIN), __('Quản lý nhận lớp', GS_TEXTDOMAIN), 'administrator', 'classroom-managements', 'display_classroom_managements');
-            // add_submenu_page( 'edit.php?post_type=classroom', __('Cài đặt', GS_TEXTDOMAIN), __('Cài đặt', GS_TEXTDOMAIN), 'administrator', 'classroom-settings', 'display_classroom_settings');
+            $c_id = get_current_user_id();
+            $user = new WP_User($c_id);
+            $u_role =  $user->roles;
 
+            if(in_array('editor', $u_role) ) {
+                $hook = add_submenu_page( 
+                    'edit.php?post_type=classroom', 
+                    __('Quản lý nhận lớp', GS_TEXTDOMAIN), 
+                    get_unseen_registration_classroom_count() != 0 ? sprintf( 'Quản lý nhận lớp <span class="awaiting-mod">%1$d</span>', get_unseen_registration_classroom_count() ) : __('Quản lý nhận lớp', GS_TEXTDOMAIN),
+                    'editor', 
+                    'classroom-managements', 
+                    'display_classroom_managements'
+                );
+            }else{
+                $hook = add_submenu_page( 
+                    'edit.php?post_type=classroom', 
+                    __('Quản lý nhận lớp', GS_TEXTDOMAIN), 
+                    get_unseen_registration_classroom_count() != 0 ? sprintf( 'Quản lý nhận lớp <span class="awaiting-mod">%1$d</span>', get_unseen_registration_classroom_count() ) : __('Quản lý nhận lớp', GS_TEXTDOMAIN),
+                    'administrator', 
+                    'classroom-managements', 
+                    'display_classroom_managements'
+                );
+            }
+            
             add_action("load-".$hook, 'mp_custom_screen_options');
         }
 
@@ -110,10 +133,6 @@ if(!class_exists('GiaSuNhatAnh')) {
             wp_enqueue_style( 'gs-custom' );
             wp_register_script('gs-settings', GS_PLUGIN_DIR_ROOT . '/admin/js/settings.js', 1, true);
             wp_enqueue_script('gs-settings');
-            // $array_settings = array(
-            //     'subjects' => get_subjects_select2(),
-            // );
-            // wp_localize_script('gs-settings', 'data', $array_settings);
 
             wp_register_script('gs-select2', GS_PLUGIN_DIR_ROOT . '/admin/js/select2.min.js', 1, true);
             wp_enqueue_script('gs-select2');
@@ -147,9 +166,6 @@ if(!class_exists('GiaSuNhatAnh')) {
 
             wp_register_script('gs-jquery', GS_PLUGIN_DIR_ROOT . '/public/js/jquery-3.5.1.min.js', 1, true);
             wp_enqueue_script('gs-jquery');
-
-            // wp_register_script('gs-fontawesome', GS_PLUGIN_DIR_ROOT . '/public/js/all.min.js', 1, true);
-            // wp_enqueue_script('gs-fontawesome');
 
             wp_register_script('gs-select2', GS_PLUGIN_DIR_ROOT . '/admin/js/select2.min.js', 1, true);
             wp_enqueue_script('gs-select2');
@@ -191,6 +207,16 @@ if(!class_exists('GiaSuNhatAnh')) {
                 $useridid->remove_role('customer');
                 $useridid->add_role($role_to_add);
             }
+            if ( isset($_POST['phone']) ) 
+            {
+                update_user_meta($user_id, 'user_phone', $_POST['phone']);
+            }
+        }
+
+        public static function remove_admin_bar() {
+            if (!current_user_can('administrator') && !is_admin()) {
+                show_admin_bar(false);
+            }
         }
         
     }
@@ -198,16 +224,34 @@ if(!class_exists('GiaSuNhatAnh')) {
     register_activation_hook( GS_PLUGIN_FILE, 'gs_create_database' );
 }
 
+
 function mp_custom_screen_options()
 {
-    $options = 'custom_per_page_options';
+    $options = 'per_page';
          
     $args = array(
         'label'     => 'Per Page',
-        'default'   => 20,
+        'default'   => 10,
         'option'    => 'submenudata_per_page'
     );
     add_screen_option($options, $args);
+    add_filter('set-screen-option', 'cmi_set_option', 10, 3);
+}
+
+function cmi_set_option($status, $option, $value) {
+ 
+    if ( 'submenudata_per_page' == $option ) return $value;
+ 
+    return $status;
+ 
+}
+
+function cc_media_default() {
+	?>
+	<script type="text/javascript">
+		jQuery(document).ready(function($){ wp.media.controller.Library.prototype.defaults.contentUserSetting=false; });
+	</script>
+	<?php
 }
 
 function gs_create_database()
@@ -216,8 +260,6 @@ function gs_create_database()
 
     $charset_collate = $wpdb->get_charset_collate();
     $table_name = $wpdb->prefix."gs_user_classrooms";
-    // $table_user = $wpdb->prefix."users";
-    // $table_class = $wpdb->prefix."p";
 
     $sql = "CREATE TABLE $table_name (
         id mediumint(9) NOT NULL AUTO_INCREMENT,
@@ -255,12 +297,14 @@ function misha_remove_my_account_links( $menu_links ){
  
 }
 
+function my_acf_update_field( $field ) {
+    $field['uploader'] = 'basic';
+    return $field;
+}
+
 function single_classroom_templates( $template ) {
     $post_types = array( 'classroom' );
 
-    // if ( is_post_type_archive( $post_types ) ){
-    //     $template = plugin_dir_path(__FILE__) . 'templates/archive_help_lessions.php';
-    // }
 
     if ( is_singular( $post_types ) && file_exists( plugin_dir_path(__FILE__) . "public/single-classroom.php" ) ){
         $template = plugin_dir_path(__FILE__) . 'public/single-classroom.php';
@@ -268,6 +312,19 @@ function single_classroom_templates( $template ) {
 
     return $template;
 }
+
+function my_acf_ungallery_button() { ?>
+    <script>
+        (function($) {
+            window.addEventListener('DOMContentLoaded', function(){
+                $('.acf-field-gallery[data-name="user_prof_id_card"] a.acf-gallery-add').text('Thêm ảnh');
+                $('.acf-field-gallery[data-name="user_prof_certificate"] a.acf-gallery-add').text('Thêm ảnh');
+                $('.acf-field-gallery[data-name="user_prof_id_card"] a.acf-gallery-add').text('Thêm ảnh');
+            });
+        })(jQuery);
+    </script>
+<?php }
+add_action('acf/input/admin_footer', 'my_acf_ungallery_button');
 
 function get_flatsome_blog_breadcrumbs() {
     $delimiter = '<span class="divider">&#187;</span>';
@@ -362,3 +419,57 @@ function get_flatsome_blog_breadcrumbs() {
 
 //     return $where;
 // }
+
+add_filter( 'user_contactmethods', 'newfields', 10, 2);
+function newfields( $methods, $user ) {
+    if($user->ID != 0 && in_array( 'tutor', $user->roles, true )) {
+        unset($methods['facebook']);
+        unset($methods['instagram']);
+        unset($methods['linkedin']);
+        unset($methods['myspace']);
+        unset($methods['pinterest']);
+        unset($methods['soundcloud']);
+        unset($methods['tumblr']);
+        unset($methods['twitter']);
+        unset($methods['youtube']);
+        unset($methods['wikipedia']);
+    }
+    return $methods;
+}
+
+function remove_website_row_wpse_94963_css()
+{
+    $user_roles = array();
+    if(isset($_REQUEST['user_id'])) {
+        $user_meta = get_userdata($_REQUEST['user_id']);
+        $user_roles = $user_meta->roles;
+    }
+
+    if(wp_get_current_user( )->ID != 0 && (in_array( 'tutor', wp_get_current_user( )->roles, true ) || in_array( 'tutor', $user_roles, true )) ) {
+        echo '<style>tr.user-url-wrap,tr.user-facebook-wrap,tr.user-instagram-wrap,tr.user-linkedin-wrap,tr.user-myspace-wrap,tr.user-pinterest-wrap,tr.user-soundcloud-wrap,tr.user-tumblr-wrap,tr.user-twitter-wrap,tr.user-youtube-wrap,tr.user-wikipedia-wrap { display: none; }</style>';
+    }
+}
+add_action( 'admin_head-user-edit.php', 'remove_website_row_wpse_94963_css' );
+add_action( 'admin_head-profile.php',   'remove_website_row_wpse_94963_css' );
+
+add_filter( 'woocommerce_customer_meta_fields', '__return_empty_array' );
+
+/**
+ * Do stuff only when posts are actually transitioned from one status to another.
+ *
+ * @param string  $new_status New post status.
+ * @param string  $old_status Old post status.
+ * @param WP_Post $post       Post object.
+ */
+function wpdocs_run_on_transition_only( $new_status, $old_status, $post ) {
+    // Kiểm tra xem trạng thái của lớp học
+    if ( ( $new_status == 'publish' ) && ( $old_status != 'publish' ) && ( $post->post_type == 'classroom' ) ) {
+        $classnoty = ClassroomNotyHelper::getInstance();
+        $classnoty->setClassroomID($post->ID);
+        $invalid_tutors = $classnoty->getTutors();
+        // write_log($invalid_tutors);
+    } else {
+        return;
+    }
+}
+add_action( 'transition_post_status', 'wpdocs_run_on_transition_only', 10, 3 );

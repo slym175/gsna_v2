@@ -13,6 +13,7 @@ if(!class_exists('GS_Profile')) {
 
             add_shortcode('profile_view', array($this, 'create_shortcode_profile_view') );
             add_shortcode('edit_profile_view', array($this, 'create_shortcode_edit_profile_view') );
+            add_filter( 'get_avatar_url', 'ayecode_get_avatar_url', 10, 3 );
         }
 
         /**
@@ -78,6 +79,7 @@ if(!class_exists('GS_Profile')) {
                             </th>
                             <td>
                                 <textarea type="text" rows="5" name="user_address" id="user_address" class="regular-text" ><?php echo esc_attr( get_the_author_meta( 'user_address', $profileuser->ID ) ); ?></textarea>
+                                <p>số nhà, ngách A, ngõ B, thôn C, xã D</p>
                             </td>
                         </tr>
                     </table>
@@ -193,7 +195,7 @@ if(!class_exists('GS_Profile')) {
                             </td>
                         </tr>
                     </table>
-                    <h2><?php echo __( 'Ảnh xác nhận hồ sơ gia sư', GS_TEXTDOMAIN ); ?></h2>
+                    <h2><?php echo __( 'Ảnh hồ sơ', GS_TEXTDOMAIN ); ?></h2>
                     <table class="form-table">
                         <tr>
                             <th>
@@ -201,16 +203,16 @@ if(!class_exists('GS_Profile')) {
                             </th>
                             <td>
                                 <?php 
-                                    $images_id_card = get_the_author_meta( 'user_prof_id_card', $profileuser->ID );
-                                    if(is_array($images_id_card) && isset($images_id_card)) {
-                                        foreach($images_id_card as $image) {
+                                    if( get_field( 'user_prof_id_card', 'user_'. $profileuser->ID ) != "") {
+                                        $id_cards = get_field( 'user_prof_id_card', 'user_'. $profileuser->ID );
+                                        foreach($id_cards as $card) {
                                         ?>
-                                        <img style="height: 100px" src="<?= home_url() . $image ?>" alt="Hồ sơ">
+                                        <img src="<?= $card['url'] ?>" alt="<?= $card['title'] ?>" class="photo" height="96">
                                         <?php
                                         }
                                     }else{
                                         ?>
-                                        <p>Gia sư chưa cập nhật thông tin này</p>
+                                            <p>Gia sư chưa cập nhật thông tin này</p>
                                         <?php
                                     }
                                 ?>
@@ -222,35 +224,11 @@ if(!class_exists('GS_Profile')) {
                             </th>
                             <td>
                                 <?php 
-                                    $images_user_prof_certificate = get_the_author_meta( 'user_prof_certificate', $profileuser->ID );
-                                    if(is_array($images_user_prof_certificate) && isset($images_user_prof_certificate)) {
-                                        foreach($images_user_prof_certificate as $image) {
+                                    if( get_field( 'user_prof_certificate', 'user_'. $profileuser->ID ) != "") {
+                                        $id_cards = get_field( 'user_prof_certificate', 'user_'. $profileuser->ID );
+                                        foreach($id_cards as $card) {
                                         ?>
-                                        <img style="height: 100px" src="<?= home_url() . $image ?>" alt="Hồ sơ">
-                                        <?php
-                                        }
-                                    }else{
-                                        ?>
-                                        <p>Gia sư chưa cập nhật thông tin này</p>
-                                        <?php
-                                    }
-                                ?>
-                            </td>
-                        </tr>
-                    </table>
-                    <h2><?php echo __( 'Thông tin khác', GS_TEXTDOMAIN ); ?></h2>
-                    <table class="form-table">
-                        <tr>
-                            <th>
-                                <label for="user_prof_activation"><?php echo __( 'Ảnh hoạt động', GS_TEXTDOMAIN ); ?></label>
-                            </th>
-                            <td>
-                                <?php 
-                                    $images_user_prof_activation = get_the_author_meta( 'user_prof_activation', $profileuser->ID );
-                                    if(is_array($images_user_prof_activation) && isset($images_user_prof_activation)) {
-                                        foreach($images_user_prof_activation as $image) {
-                                        ?>
-                                            <img style="height: 100px" src="<?= home_url() . $image ?>" alt="Hồ sơ">
+                                        <img src="<?= $card['url'] ?>" alt="<?= $card['title'] ?>" class="photo" height="96">
                                         <?php
                                         }
                                     }else{
@@ -261,6 +239,30 @@ if(!class_exists('GS_Profile')) {
                                 ?>
                             </td>
                         </tr>
+                        <tr>
+                            <th>
+                                <label for="user_prof_activation"><?php echo __( 'Ảnh hoạt động', GS_TEXTDOMAIN ); ?></label>
+                            </th>
+                            <td>
+                                <?php 
+                                    if( get_field( 'user_prof_activation', 'user_'. $profileuser->ID ) != "") {
+                                        $id_cards = get_field( 'user_prof_activation', 'user_'. $profileuser->ID );
+                                        foreach($id_cards as $card) {
+                                        ?>
+                                        <img src="<?= $card['url'] ?>" alt="<?= $card['title'] ?>" class="photo" height="96">
+                                        <?php
+                                        }
+                                    }else{
+                                        ?>
+                                            <p>Gia sư chưa cập nhật thông tin này</p>
+                                        <?php
+                                    }
+                                ?>
+                            </td>
+                        </tr>
+                    </table>
+                    <h2><?php echo __( 'Thông tin khác', GS_TEXTDOMAIN ); ?></h2>
+                    <table class="form-table">
                         <tr>
                             <th>
                                 <label for="user_prof_intro_video"><?php echo __( 'Video giới thiệu', GS_TEXTDOMAIN ); ?></label>
@@ -314,6 +316,7 @@ if(!class_exists('GS_Profile')) {
                 <p class="form-user_address">
                     <label for="user_address"><?php echo __( 'Địa chỉ hiện tại', GS_TEXTDOMAIN ); ?></label>
                     <textarea type="text" rows="5" name="user_address" id="user_address" class="regular-text" ><?php echo esc_attr( get_the_author_meta( 'user_address', $profileuser->ID ) ); ?></textarea>
+                    <p>số nhà, ngách A, ngõ B, thôn C, xã D</p>
                 </p>
                 <h2><?php echo __( 'Thông tin gia sư', GS_TEXTDOMAIN ); ?></h2>
                 <p>
@@ -443,45 +446,8 @@ if(!class_exists('GS_Profile')) {
                         <?php endif ?>
                     </table>
                 </p>
-                <h2><?php echo __( 'Ảnh xác nhận hồ sơ gia sư', GS_TEXTDOMAIN ); ?></h2>
-                <p>
-                    <label for="user_prof_id_card"><?php echo __( 'Ảnh CMT/Căn cước/Hộ chiếu', GS_TEXTDOMAIN ); ?></label>
-                    <?php 
-                    $images_user_prof_id_card = get_the_author_meta( 'user_prof_id_card', $profileuser->ID );
-                    if(is_array($images_user_prof_id_card) && isset($images_user_prof_id_card)) {
-                        foreach($images_user_prof_id_card as $image) { ?>
-                            <img style="height: 100px" src="<?= home_url() . $image ?>" alt="Hồ sơ">
-                    <?php } }else{ ?>
-                    <p>Gia sư chưa cập nhật thông tin này</p>
-                    <?php } ?>
-                    <input class="user_prof_id_card" name="user_prof_id_card[]" type="file" multiple />
-                </p>
-                <p>
-                    <label for="user_prof_certificate"><?php echo __( 'Thẻ sinh viên/bằng/chứng chỉ', GS_TEXTDOMAIN ); ?></label>
-                    <?php 
-                    $images_user_prof_certificate = get_the_author_meta( 'user_prof_certificate', $profileuser->ID );
-                    if(is_array($images_user_prof_certificate) && isset($images_user_prof_certificate)) {
-                        foreach($images_user_prof_certificate as $image) { ?>
-                            <img style="height: 100px" src="<?= home_url() . $image ?>" alt="Hồ sơ">
-                    <?php } }else{ ?>
-                    <p>Gia sư chưa cập nhật thông tin này</p>
-                    <?php } ?>
-                    <input class="user_prof_certificate" name="user_prof_certificate[]" type="file" multiple />
-                </p>
+                
                 <h2><?php echo __( 'Thông tin khác', GS_TEXTDOMAIN ); ?></h2>
- 
-                <p>
-                    <label for="user_prof_activation"><?php echo __( 'Ảnh hoạt động', GS_TEXTDOMAIN ); ?></label>
-                    <?php 
-                    $images_user_prof_activation = get_the_author_meta( 'user_prof_activation', $profileuser->ID );
-                    if(is_array($images_user_prof_activation) && isset($images_user_prof_activation)) {
-                        foreach($images_user_prof_activation as $image) { ?>
-                            <img style="height: 100px" src="<?= home_url() . $image ?>" alt="Hồ sơ">
-                    <?php } }else{ ?>
-                    <p>Gia sư chưa cập nhật thông tin này</p>
-                    <?php } ?>
-                    <input class="user_prof_activation" name="user_prof_activation[]" type="file" multiple />
-                </p>
                 <p>
                     <label for="user_prof_intro_video"><?php echo __( 'Video giới thiệu', GS_TEXTDOMAIN ); ?></label>
                     <input type="text" name="user_prof_intro_video" id="user_prof_intro_video" value="<?php echo esc_attr( get_the_author_meta( 'user_prof_intro_video', $profileuser->ID ) ); ?>" class="regular-text" />
@@ -538,19 +504,8 @@ if(!class_exists('GS_Profile')) {
             elseif (empty($new) && $old)
                 delete_user_meta($userId, 'user_prof_schedule', $old);
 
-            $up_dir = GS_UPLOAD_DIR."/".$userId;
-            if (! is_dir($up_dir)) {
-                mkdir( $up_dir, 0700 );
-            }
 
-            $user_prof_id_card = self::uploadSimple($up_dir, $_FILES['user_prof_id_card'], get_the_author_meta( 'user_prof_id_card', $userId ));
-            update_user_meta($userId, 'user_prof_id_card', $user_prof_id_card);
-
-            $user_prof_certificate = self::uploadSimple($up_dir, $_FILES['user_prof_certificate'], get_the_author_meta( 'user_prof_certificate', $userId ));
-            update_user_meta($userId, 'user_prof_certificate', $user_prof_certificate);
-
-            $user_prof_activation = self::uploadSimple($up_dir, $_FILES['user_prof_activation'], get_the_author_meta( 'user_prof_activation', $userId ));
-            update_user_meta($userId, 'user_prof_activation', $user_prof_activation);
+            // add_filter( 'avatar_defaults', array($this, 'wpb_new_gravatar'));
 
             update_user_meta($userId, 'user_prof_intro_video', $_REQUEST['user_prof_intro_video']);
         }
@@ -562,24 +517,31 @@ if(!class_exists('GS_Profile')) {
         public static function create_shortcode_edit_profile_view() {
             require_once GS_PLUGIN_DIR . "/public/views/profiles/edit.php";
         }
-    
-        public static function uploadSimple($target_dir, $files, $meta)
-        {
-            $urls = array();
-            if($files['name'][0] != "") {
-                for($i = 0; $i < count($files['name']); $i++) {
-                    if ( $files['error'][$i] > 0)
-                        return $meta;
-                    else {
-                        move_uploaded_file( $files['tmp_name'][$i], $target_dir ."/". $files['name'][$i]);
-                        $urls[$i] = "/wp-content".explode('/wp-content', $target_dir ."/". $files['name'][$i], 2)[1];
-                    }
-                }
-            }else{
-                return $meta;
+
+    }
+
+    function ayecode_get_avatar_url( $url, $id_or_email, $args ) {
+        $id = '';
+        if ( is_numeric( $id_or_email ) ) {
+            $id = (int) $id_or_email;
+        } elseif ( is_object( $id_or_email ) ) {
+            if ( ! empty( $id_or_email->user_id ) ) {
+                $id = (int) $id_or_email->user_id;
             }
-            return $urls;
+        } else {
+            $user = get_user_by( 'email', $id_or_email );
+            $id = !empty( $user ) ?  $user->data->ID : '';
+        }
+        //Preparing for the launch.
+        $custom_url = $id ?  get_field( 'user_prof_avatar','user_'. $id ) : '';
+        
+        // If there is no custom avatar set, return the normal one.
+        if( $custom_url == '' || !empty($args['force_default'])) {
+            return esc_url_raw( 'https://secure.gravatar.com/avatar/9ff1f2e96da0ba90b50b3d0ec986141a?s=96&d=mm&r=g' ); 
+        }else{
+            return esc_url_raw($custom_url);
         }
     }
+
     new GS_Profile();
 }

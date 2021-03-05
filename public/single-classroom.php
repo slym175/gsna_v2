@@ -49,6 +49,11 @@ get_header();
                             <p class="class_target"><i class="fa fa-bookmark-o" aria-hidden="true"></i><?= __('Yêu cầu: ', GS_TEXTDOMAIN) ?><?= get_post_meta( get_the_ID(  ), 'class_target', true ) ?></p>
                         <?php } ?>
                     </div>
+                    <div class="mb-1">
+                        <?php if( get_post_meta( get_the_ID(  ), 'class_gender', true ) ) { $array_gt = array("Nam", "Nữ", "Không yêu cầu"); ?>
+                            <p class="class_target"><i class="fa fa-transgender" aria-hidden="true"></i><?= __('Giới tính: ', GS_TEXTDOMAIN) ?><?= $array_gt[get_post_meta( get_the_ID(  ), 'class_gender', true )] ?></p>
+                        <?php } ?>
+                    </div>
                     
                     <?php 
                         if(!empty( get_the_excerpt( ))) {
@@ -135,7 +140,16 @@ get_header();
                             <p class="class_price"><i class="fa fa-clock-o" aria-hidden="true"></i><?= get_post_meta( get_the_ID(  ), 'class_times', true ) ?></p>
                         <?php } ?>
                         <?php if( get_post_meta( get_the_ID(  ), 'class_target', true ) ) { ?>
-                            <p class="class_target"><i class="fa fa-bookmark-o" aria-hidden="true"></i><?= __('Yêu cầu: ', GS_TEXTDOMAIN) ?><?= get_post_meta( get_the_ID(  ), 'class_target', true ) ?></p>
+                            <p class="class_target">
+                                <i class="fa fa-bookmark-o" aria-hidden="true"></i>
+                                <?= __('Yêu cầu: ', GS_TEXTDOMAIN) ?><?= get_post_meta( get_the_ID(  ), 'class_target', true ) ?>
+                            </p>
+                        <?php } ?>
+                        <?php if( get_post_meta( get_the_ID(  ), 'class_gender', true ) ) { $array_gt = array("Nam", "Nữ", "Không yêu cầu"); ?>
+                            <p class="class_gender">
+                                <i class="fa fa-venus-mars" aria-hidden="true"></i>
+                                <?= __('Giới tính: ', GS_TEXTDOMAIN) ?><?= $array_gt[get_post_meta( get_the_ID(  ), 'class_gender', true )] ?>
+                            </p>    
                         <?php } ?>
                         
                     </div>
@@ -148,14 +162,19 @@ get_header();
     </div>
 </div>
 <div class="gs-popup-classroom d-none">
-    <div class="contents">
-        <i class="fa fa-times"></i>
-        <div class="noty"  style="margin-bottom: 6px; font-size: 28px; font-weight: bold"></div>
-        <?php if(get_option( 'gs_options' )['fanpage_url']) : ?>
-            <p style="margin-bottom: 6px; margin-top: 30px">Liên hệ fanpage để được hướng dẫn</p>
-            <a style="word-break: break-word;" href="<?= get_option( 'gs_options' )['fanpage_url'] ?>"><?= get_option( 'gs_options' )['fanpage_url'] ?></a>
-        <?php endif ?>
-    </div>
+<div class="contents">
+            <i class="fa fa-times"></i>
+            <div class="noty"  style="margin-bottom: 6px; font-size: 28px; font-weight: bold"></div>
+            <?php if(get_option( 'gs_options' )['fanpage_url']) : ?>
+                <p style="margin-bottom: 6px; margin-top: 30px">Liên hệ fanpage để được hướng dẫn</p>
+                <div>
+                    <?php if( fanpageURLArray() && is_array(fanpageURLArray()) ) : foreach(fanpageURLArray() as $key => $page) : ?>
+                        <a style="word-break: break-word;" href="<?= wp_is_mobile() ? str_replace(['https://www.facebook.com/'], 'fb://page?id=', $page) : $page ?>"><?= $key ?></a> 
+                        <?= end(fanpageURLArray()) == $page ? "" : " - " ?>
+                    <?php endforeach; endif ?>
+                </div>
+            <?php endif ?>
+        </div>
 </div>
 <?php 
 get_footer( );

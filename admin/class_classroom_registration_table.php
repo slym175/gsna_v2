@@ -83,6 +83,16 @@ class Custom_Registration_Class_List_Table extends WP_List_Table
         );
     }
 
+    function column_classroom_code($item)
+    {
+        $is_seen = $item['is_seen'] == 0 ? "un-seen" : "";
+        return sprintf(
+            '<p class="%1$s">%2$s</p>',
+            $is_seen,
+            get_field('class_ID', $item['classroom_id']) 
+        );
+    }
+
     /**
      * [REQUIRED] this is how checkbox column renders
      *
@@ -91,11 +101,12 @@ class Custom_Registration_Class_List_Table extends WP_List_Table
      */
     function column_status($item)
     {
+        $array_status = array('pending' => 'Chờ xác nhận', 'confirmed' => 'Đã xác nhận');
         $is_seen = $item['is_seen'] == 0 ? "un-seen" : "";
         return sprintf(
             '<p class="%1$s">%2$s</p>',
             $is_seen,
-            strtoupper($item['status'])
+            $array_status[trim($item['status'])]
         );
     }
 
@@ -125,11 +136,12 @@ class Custom_Registration_Class_List_Table extends WP_List_Table
     function get_columns()
     {
         $columns = array(
-            'cb' => '<input type="checkbox" />', //Render a checkbox instead of text
-            'user_id' => __('Gia sư', GS_TEXTDOMAIN),
-            'classroom_id' => __('Lớp học', GS_TEXTDOMAIN),
-            'status' => __('Trạng thái', GS_TEXTDOMAIN),
-            'created_at' => __('Ngày lập', GS_TEXTDOMAIN),
+            'cb'                => '<input type="checkbox" />', //Render a checkbox instead of text
+            'user_id'           => __('Gia sư', GS_TEXTDOMAIN),
+            'classroom_code'    => __('Mã lớp', GS_TEXTDOMAIN),
+            'classroom_id'      => __('Lớp học', GS_TEXTDOMAIN),
+            'status'            => __('Trạng thái', GS_TEXTDOMAIN),
+            'created_at'        => __('Ngày lập', GS_TEXTDOMAIN),
         );
         return $columns;
     }
@@ -144,10 +156,10 @@ class Custom_Registration_Class_List_Table extends WP_List_Table
     function get_sortable_columns()
     {
         $sortable_columns = array(
-            'user_id' => array('user_id', true),
-            'classroom_id' => array('classroom_id', true),
-            'status' => array('status', true),
-            'created_at' => array('created_at', true)
+            'user_id'       => array('user_id', true),
+            'classroom_id'  => array('classroom_id', true),
+            'status'        => array('status', true),
+            'created_at'    => array('created_at', true)
         );
         return $sortable_columns;
     }
@@ -197,7 +209,7 @@ class Custom_Registration_Class_List_Table extends WP_List_Table
         global $wpdb;
         $table_name = $wpdb->prefix . 'gs_user_classrooms'; // do not forget about tables prefix
 
-        $per_page = 5; // constant, how much records will be shown per page
+        $per_page = $this->get_items_per_page('submenudata_per_page', 10); // constant, how much records will be shown per page
 
         $columns = $this->get_columns();
         $hidden = array();
@@ -216,7 +228,7 @@ class Custom_Registration_Class_List_Table extends WP_List_Table
 
         // prepare query params, as usual current page, order by and order direction
         $paged = isset($_REQUEST['paged']) ? max(0, intval($_REQUEST['paged'] - 1) * $per_page) : 0;
-        $orderby = (isset($_REQUEST['orderby']) && in_array($_REQUEST['orderby'], array_keys($this->get_sortable_columns()))) ? $_REQUEST['orderby'] : 'ID';
+        $orderby = (isset($_REQUEST['orderby']) && in_array($_REQUEST['orderby'], array_keys($this->get_sortable_columns()))) ? $_REQUEST['orderby'] : 'created_at';
         $order = (isset($_REQUEST['order']) && in_array($_REQUEST['order'], array('asc', 'desc'))) ? $_REQUEST['order'] : 'asc';
 
         // [REQUIRED] define $items array

@@ -3066,10 +3066,29 @@ if (!function_exists('write_log')) {
     }
 }
 
-/**
-* Register the action with WordPress.
-*/
-add_action( 'tutsplus_action', 'tutsplus_action_example' );
-function tutsplus_action_example() {
-    echo 'This is a custom action hook.';
+function getCoordinates($location)
+{
+    $key = get_option('gs_options')['wemap_key'] ? get_option('gs_options')['wemap_key'] : '';
+    $coord = '';
+    $body  = '';
+    if($location) {
+        $api_uri = SEARCH_URI . '?text=' . $location .'&key=' . $key;
+        $body    = json_decode( wp_remote_retrieve_body( wp_remote_get( esc_url_raw( $api_uri ) ) ), true );
+        $latitude   = isset($body['features']) ? (isset($body['features'][0]) ? $body['features'][0]['geometry']['coordinates'][0] : 0) : 0;
+        $longitude  = isset($body['features']) ? (isset($body['features'][0]) ? $body['features'][0]['geometry']['coordinates'][1] : 0) : 0;
+        $coord      = $longitude . ',' . $latitude;
+    }
+            
+    return $coord;
+}
+
+function getAddress($id, $type = 'classroom')
+{
+    $location = 'location';
+    if($type == 'classroom') {
+        $location = get_post_meta( $id, 'class_address', true );
+    }else{
+        $location = get_the_author_meta( 'user_address', $id ) . ', ' . get_the_author_meta( 'user_train_district', $id ) . ', ' . get_the_author_meta( 'user_train_province', $id );
+    }
+    return $location;
 }

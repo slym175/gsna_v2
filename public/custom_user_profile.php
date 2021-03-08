@@ -471,6 +471,7 @@ if(!class_exists('GS_Profile')) {
             update_user_meta($userId, 'user_train_province', $_REQUEST['user_train_province']);
             update_user_meta($userId, 'user_train_district', $_REQUEST['user_train_district']);
             update_user_meta($userId, 'user_address', $_REQUEST['user_address']);
+            update_user_meta($userId, 'user_coordinates', getCoordinates(getAddress($userId, 'user')));
 
             update_user_meta($userId, 'user_tutor_exp', $_REQUEST['user_tutor_exp']);
             update_user_meta($userId, 'user_tutor_awards', $_REQUEST['user_tutor_awards']);

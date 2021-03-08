@@ -1,8 +1,5 @@
 <?php 
 
-define('API_URI', 'https://apis.wemap.asia/route-api/route?type=json&locale=vi-VN&vehicle=car&weighting=fastest&elevation=false');
-define('SEARCH_URI', 'https://apis.wemap.asia/geocode-1/search');
-
 if(!class_exists('ClassroomNotyHelper')) {
     class ClassroomNotyHelper {
         protected static $instance = null;
@@ -35,7 +32,7 @@ if(!class_exists('ClassroomNotyHelper')) {
                 'order'   => 'ASC'
             );
             $tutors = get_users( $args );
-            $class_point = $this->getCoordinates($this->getAddress($this->classroom_id, 'classroom'));
+            $class_point = getCoordinates(getAddress($this->classroom_id, 'classroom'));
             
             if($tutors && is_array($tutors)) {
                 foreach ( $tutors as $key => $tutor ) {
@@ -43,11 +40,9 @@ if(!class_exists('ClassroomNotyHelper')) {
                     if( !get_the_author_meta( 'user_address', $tutor->ID) || !get_the_author_meta('user_prof_mail_sms_submit', $tutor->ID) ) { continue; }
                     
                     // kiểm tra địa chỉ của gia sư và bật/tắt thông báo
-                    $tutor_point = $this->getCoordinates($this->getAddress($tutor->ID, 'tutor'));
-                    $api_uri     = API_URI . '&point=' . $class_point . '&point=' . $tutor_point . '&key=' . $this->key;
-                    $body        = json_decode( wp_remote_retrieve_body( wp_remote_get( esc_url_raw( $api_uri ) ) ), true );
-                    if( !isset( $body['paths'] ) ) { continue; }
-                    $distance    = $this->getMinDistance( $body['paths'] );
+                    $tutor_point = get_the_author_meta( 'user_coordinates', $tutor->ID );
+
+                    $distance    = $this->distanceBetween2Points( $class_point, $tutor_point );
                     if($distance > $this->max_distance) { continue; }
                     $invalid_tutors[$tutor->ID] = $tutor->user_email;  
                 }
@@ -67,40 +62,21 @@ if(!class_exists('ClassroomNotyHelper')) {
             return $this->classroom_id = $classroom_id;
         }
 
-        function getMinDistance($data, $value = 'distance'){
-            $min = isset($data[0]) ? $data[0][$value] : 0;
-            foreach($data as $point){
-                if($min > (float)$point[$value] && isset($point[$value])){
-                    $min = $point[$value];
-                }
-            }
-            return $min;
-        }
+        private function distanceBetween2Points($point1, $point2) {
+            $pi80 = M_PI / 180;
+            $lat1 = floatval(explode(',', $point1)[1]) * $pi80;
+            $lng1 = floatval(explode(',', $point1)[0]) * $pi80;
+            $lat2 = floatval(explode(',', $point2)[1]) * $pi80;
+            $lng2 = floatval(explode(',', $point2)[0]) * $pi80;
 
-        public function getAddress($id, $type = 'classroom')
-        {
-            $location = 'location';
-            if($type == 'classroom') {
-                $location = get_post_meta( $id, 'class_address', true );
-            }else{
-                $location = get_the_author_meta( 'user_address', $id ) . ', ' . get_the_author_meta( 'user_train_district', $id ) . ', ' . get_the_author_meta( 'user_train_province', $id );
-            }
-            return $location;
-        }
+            $r = 6372.797; // earth radius
+            $dlat = $lat2 - $lat1;
+            $dlng = $lng2 - $lng1;
+            $a = sin($dlat / 2) * sin($dlat / 2) + cos($lat1) * cos($lat2) * sin($dlng / 2) * sin($dlng / 2);
+            $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+            $km = $r * $c;
 
-        public function getCoordinates($location)
-        {
-            $coord = '';
-            $body  = '';
-            if($location) {
-                $api_uri = SEARCH_URI . '?text=' . $location .'&key=' . $this->key;
-                $body    = json_decode( wp_remote_retrieve_body( wp_remote_get( esc_url_raw( $api_uri ) ) ), true );
-                $latitude   = isset($body['features']) ? (isset($body['features'][0]) ? $body['features'][0]['geometry']['coordinates'][0] : 0) : 0;
-                $longitude  = isset($body['features']) ? (isset($body['features'][0]) ? $body['features'][0]['geometry']['coordinates'][1] : 0) : 0;
-                $coord      = $longitude . ',' . $latitude;
-            }
-            
-            return $coord;
+            return $km * 1000;
         }
     }
 }

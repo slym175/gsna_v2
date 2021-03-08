@@ -39,6 +39,9 @@ if ( ! defined( 'GS_UPLOAD_DIR' ) ) {
     define( 'GS_UPLOAD_DIR', wp_upload_dir()['basedir'].'/gsna-dir');
 }
 
+define('API_URI', 'https://apis.wemap.asia/route-api/route?type=json&locale=vi-VN&vehicle=car&weighting=fastest&elevation=false');
+define('SEARCH_URI', 'https://apis.wemap.asia/geocode-1/search');
+
 if(!class_exists('GiaSuNhatAnh')) {
     add_action('plugins_loaded', array('GiaSuNhatAnh', 'init'));
     class GiaSuNhatAnh {
@@ -476,8 +479,8 @@ function wpdocs_run_on_transition_only( $new_status, $old_status, $post ) {
         $invalid_tutors = $classnoty->getTutors();
         write_log($invalid_tutors);
 
-        // $noty = Noty_Sender::getInstance();
-        // $noty->sendMail($post->ID, $invalid_tutors);
+        $noty = Noty_Sender::getInstance();
+        $noty->sendMail($post->ID, $invalid_tutors);
     } else {
         return;
     }

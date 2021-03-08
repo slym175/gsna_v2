@@ -66,7 +66,7 @@ if(!class_exists("GsSettingsPage")) {
 
             add_settings_section(
                 'gs_setting_section', // ID
-                'GS Settings', // Title
+                'Cài đặt chung', // Title
                 '', // Callback
                 'gs-settings' // Page
             );  
@@ -290,19 +290,82 @@ if(!class_exists("GsSettingsPage")) {
             );
 
             add_settings_field(
-                'classroom_publish_noty', // ID
+                'classroom_publish_noty_distance', // ID
+                'Khoảng cách tối đa', // Title 
+                array( $this, 'gs_render_settings_field' ), // Callback
+                'gs-settings', // Page
+                'gs_noty_setting_section', // Section 
+                array (
+                    'parent'        => 'gs_options', // Option name
+                    'id'            => 'classroom_publish_noty_distance', // Field ID
+                    'class'         => 'regular-text one-line', // Field ID
+                    'type'          => 'input', // Field Type
+                    'subtype'       => 'text', // Field Subtype
+                    'name'          => 'classroom_publish_noty_distance', // Field Name
+                    'description'   => 'Khoảng cách tối đã từ địa chỉ của gia sư đến lớp học để có thể nhận được thông báo. Đơn vị: mét(m)',
+                    'options'       => array(
+                        //'required'  => true,
+                        // 'rows'      => 5
+                    )
+                ) // Callback Arguments          
+            );
+
+            add_settings_field(
+                'classroom_publish_noty_sms', // ID
                 'Nội dung tin nhắn', // Title 
                 array( $this, 'gs_render_settings_field' ), // Callback
                 'gs-settings', // Page
                 'gs_noty_setting_section', // Section 
                 array (
                     'parent'        => 'gs_options', // Option name
-                    'id'            => 'classroom_publish_noty', // Field ID
+                    'id'            => 'classroom_publish_noty_sms', // Field ID
                     'class'         => 'regular-text one-line', // Field ID
                     'type'          => 'textarea', // Field Type
                     'subtype'       => 'text', // Field Subtype
-                    'name'          => 'classroom_publish_noty', // Field Name
-                    'description'   => __('Nội dung tin nhắn có thể dùng các thông tin động như: {tutor_name}, {class_name}, {class_address}, {class_schedule}, {site_url}, {site_name}', GS_TEXTDOMAIN),
+                    'name'          => 'classroom_publish_noty_sms', // Field Name
+                    'description'   => __('Nội dung tin nhắn có thể dùng các thông tin động như: {class_name}, {class_address}, {site_url}, {site_name}', GS_TEXTDOMAIN),
+                    'options'       => array(
+                        // 'required'  => true,
+                        'rows'      => 5
+                    )
+                ) // Callback Arguments          
+            );
+
+            add_settings_field(
+                'classroom_publish_noty_mail_subject', // ID
+                'Tiêu đề mail', // Title 
+                array( $this, 'gs_render_settings_field' ), // Callback
+                'gs-settings', // Page
+                'gs_noty_setting_section', // Section 
+                array (
+                    'parent'        => 'gs_options', // Option name
+                    'id'            => 'classroom_publish_noty_mail_subject', // Field ID
+                    'class'         => 'regular-text one-line', // Field ID
+                    'type'          => 'input', // Field Type
+                    'subtype'       => 'text', // Field Subtype
+                    'name'          => 'classroom_publish_noty_mail_subject', // Field Name
+                    'description'   => '',
+                    'options'       => array(
+                        //'required'  => true,
+                        // 'rows'      => 5
+                    )
+                ) // Callback Arguments          
+            );
+
+            add_settings_field(
+                'classroom_publish_noty_mail', // ID
+                'Nội dung mail', // Title 
+                array( $this, 'gs_render_settings_field' ), // Callback
+                'gs-settings', // Page
+                'gs_noty_setting_section', // Section 
+                array (
+                    'parent'        => 'gs_options', // Option name
+                    'id'            => 'classroom_publish_noty_mail', // Field ID
+                    'class'         => 'regular-text one-line', // Field ID
+                    'type'          => 'textarea_html', // Field Type
+                    'subtype'       => 'text', // Field Subtype
+                    'name'          => 'classroom_publish_noty_mail', // Field Name
+                    'description'   => __('Nội dung mail có thể dùng các thông tin động như: {class_name}, {class_address}, {site_url}, {site_name}', GS_TEXTDOMAIN),
                     'options'       => array(
                         // 'required'  => true,
                         'rows'      => 5
@@ -361,6 +424,15 @@ if(!class_exists("GsSettingsPage")) {
                         $field_options,
                         sanitize_text_field( isset( $this->options[$args['id']] ) ? esc_attr( $this->options[$args['id']]) : '' )
                     );
+                    printf('<p>%1$s</p>', $args['description']);
+                    break;
+                case 'textarea_html':
+                    wp_editor( html_entity_decode(isset( $this->options[$args['id']] ) ? sanitize_text_field(esc_attr( $this->options[$args['id']])) : ''), $args['id'], array(
+                        'wpautop' => false, 
+                        'textarea_name' => $field_name,
+                        'media_buttons' => true,
+                        'tinymce' => true,
+                    ) );
                     printf('<p>%1$s</p>', $args['description']);
                     break;
                 default: 

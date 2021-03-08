@@ -26,18 +26,19 @@ if(!class_exists('Noty_Sender')) {
         {
             // $arguments[0] : $classroom_id (Mã lớp học gửi đi)
             // $arguments[1] : $to (Danh sách người nhận)
-            // $arguments[2] : $subject (Tiêu đề mail)
-            // $arguments[3] : $message (Nội dung mail)
+
+            if(!isset($arguments[1])) {
+                return $this->sendNotyResponse(true, 'Chả biết gửi cho ai', 'Không có địa chỉ email được truyền vào');
+            }
 
             $result = false;
             $to = 'thuyhu9876@gmail.com';
-            $subject = 'GỬI TỪ GIA SƯ NHẬT ANH';
+            $classroom_id = isset($arguments[0]) ? $arguments[0] : 0; 
+            $subject = get_option('gs_options')['classroom_publish_noty_mail_subject'] ? get_option('gs_options')['classroom_publish_noty_mail_subject'] : 'GỬI TỪ GIA SƯ NHẬT ANH';
             $headers = array('Content-Type: text/html; charset=UTF-8');
-            $message = 'Có lớp mới được đăng tải. Ghé thăm ' . get_bloginfo('url') . ' để tìm hiểu thêm.';
+            $message = $this->generateMessage(get_option('gs_options')['classroom_publish_noty_mail'] ? get_option('gs_options')['classroom_publish_noty_mail'] : 'Có lớp mới được đăng tải. Ghé thăm ' . get_bloginfo('url') . ' để tìm hiểu thêm.', $classroom_id);
             if(is_array($arguments) && $arguments) {
                 $to = isset($arguments[1]) ? (is_array($arguments[1]) ? implode(',', $arguments[1]) : $arguments[1]) : $to;
-                $subject = isset($arguments[2]) ? $arguments[2] : $subject;
-                $message = isset($arguments[3]) ? $this->generateMessage( $arguments[3], isset($arguments[0]) ? $arguments[0] : 0 ) : $message;
             }
 
             $mailResult = wp_mail( $to, $subject, $message, $headers );
@@ -53,28 +54,31 @@ if(!class_exists('Noty_Sender')) {
         {
             // $arguments[0] : $classroom_id (Mã lớp học gửi đi)
             // $arguments[1] : $to (Danh sách người nhận)
-            // $arguments[2] : $message (Nội dung mail)
             $result = false;
             $to = '+84986114671';
-            $message = 'Có lớp mới được đăng tải. Ghé thăm ' . get_bloginfo('url') . ' để tìm hiểu thêm.';
+            $classroom_id = isset($arguments[0]) ? $arguments[0] : 0; 
+            $message = $this->generateMessage(get_option('gs_options')['classroom_publish_noty_sms'] ? get_option('gs_options')['classroom_publish_noty_sms'] : 'Có lớp mới được đăng tải. Ghé thăm ' . get_bloginfo('url') . ' để tìm hiểu thêm.', $classroom_id);
             if(is_array($arguments) && $arguments) {
                 $to = isset($arguments[1]) ? (is_array($arguments[1]) ? implode(',', $arguments[1]) : $arguments[1]) : $to;
-                $message = isset($arguments[2]) ? $this->generateMessage( $arguments[2], isset($arguments[0]) ? $arguments[0] : 0 ) : $message;
             }
         }
 
         private function sendNotyResponse($status = true, $message = '', $data = '')
         {
-            return array(
+            $reponse = array(
                 'status'    => $status,
                 'message'   => $message,
                 'data'      => $data
             );
+            write_log($reponse);
+            return $reponse;
         }
 
         private function generateMessage($message, $id)
         {
             $data = array(
+                'class_name'        => get_the_title( $id ),
+                'class_address'     => get_post_meta( $id, 'class_address', true ),
                 'site_name'         => get_bloginfo('name'), 
                 'site_url'          => get_bloginfo('url'), 
             );

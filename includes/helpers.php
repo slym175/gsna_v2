@@ -1121,18 +1121,9 @@ function remove_registration_classroom()
 
 function isTutorCompletedProfile($user_id) : bool
 {
-    if( !get_field('user_prof_avatar', 'user_'. $user_id) ) {
+    if( !get_field('user_prof_avatar', 'user_'. $user_id) || !get_the_author_meta('user_phone', $user_id) || !get_the_author_meta('user_birth', $user_id) || !get_the_author_meta( 'user_address', $user_id ) ) {
         return false;
     }
-
-    if( !get_the_author_meta('user_phone', $user_id) ) {
-        return false;
-    }
-
-    if( !get_the_author_meta('user_birth', $user_id) ) {
-        return false;
-    }
-
     return true;
 }
 
@@ -3073,4 +3064,12 @@ if (!function_exists('write_log')) {
             }
         }
     }
+}
+
+/**
+* Register the action with WordPress.
+*/
+add_action( 'tutsplus_action', 'tutsplus_action_example' );
+function tutsplus_action_example() {
+    echo 'This is a custom action hook.';
 }

@@ -7,7 +7,7 @@ if(!class_exists('ClassroomType')) {
         {
             add_action( 'init', array($this, 'classroom_type_init') );
             add_action( 'add_meta_boxes', array($this, 'classroom_meta_box') );
-            add_action('admin_footer-post.php', array($this, 'wpb_append_post_status_list') );
+            // add_action('admin_footer-post.php', array($this, 'wpb_append_post_status_list') );
         }
 
         public static function classroom_type_init(){
@@ -118,17 +118,17 @@ if(!class_exists('ClassroomType')) {
     
             register_taxonomy( 'class_theme', 'classroom', $theme_args );
 
-            register_post_status( 'teaching', array(
-                'label'                     => _x( 'Teaching', 'classroom', GS_TEXTDOMAIN ),
-                'public'                    => true,
-                'label_count'               => _n_noop( 'Teaching <span class="count">(%s)</span>', 'Teaching <span class="count">(%s)</span>', GS_TEXTDOMAIN ),
-                // 'post_type'                 => array( 'classroom' ), // Define one or more post types the status can be applied to.
-                'show_in_admin_all_list'    => true,
-                'show_in_admin_status_list' => true,
-                'show_in_metabox_dropdown'  => true,
-                'show_in_inline_dropdown'   => true,
-                'dashicon'                  => 'dashicons-yes',
-            ) );
+            // register_post_status( 'teaching', array(
+            //     'label'                     => _x( 'Teaching', 'classroom', GS_TEXTDOMAIN ),
+            //     'public'                    => true,
+            //     'label_count'               => _n_noop( 'Teaching <span class="count">(%s)</span>', 'Teaching <span class="count">(%s)</span>', GS_TEXTDOMAIN ),
+            //     'post_type'                 => array( 'classroom' ), // Define one or more post types the status can be applied to.
+            //     'show_in_admin_all_list'    => true,
+            //     'show_in_admin_status_list' => true,
+            //     'show_in_metabox_dropdown'  => true,
+            //     'show_in_inline_dropdown'   => true,
+            //     'dashicon'                  => 'dashicons-yes',
+            // ) );
         }
 
         public static function classroom_meta_box()
@@ -141,26 +141,26 @@ if(!class_exists('ClassroomType')) {
 
         // Using jQuery to add it to post status dropdown
 
-        public static function wpb_append_post_status_list()
-        {
-            global $post;
-            $complete = '';
-            $label = '';
-            if($post->post_type == 'classroom'){
-                if($post->post_status == 'teaching'){
-                    $complete = ' selected="selected"';
-                    $label = '<span id="post-status-display"> '. __('Đang dạy', GS_TEXTDOMAIN) .'</span>';
-                }
-                echo '
-                    <script>
-                        jQuery(document).ready(function($){
-                            $("select#post_status").append("<option value=\"teaching\" '.$complete.'>'. __('Đang dạy', GS_TEXTDOMAIN) .'</option>");
-                            $(".misc-pub-section label").append("'.$label.'");
-                        });
-                    </script>
-                ';
-            }
-        }
+        // public static function wpb_append_post_status_list()
+        // {
+        //     global $post;
+        //     $complete = '';
+        //     $label = '';
+        //     if($post->post_type == 'classroom'){
+        //         if($post->post_status == 'teaching'){
+        //             $complete = ' selected="selected"';
+        //             $label = '<span id="post-status-display"> '. __('Đang dạy', GS_TEXTDOMAIN) .'</span>';
+        //         }
+        //         echo '
+        //             <script>
+        //                 jQuery(document).ready(function($){
+        //                     $("select#post_status").append("<option value=\"teaching\" '.$complete.'>'. __('Đang dạy', GS_TEXTDOMAIN) .'</option>");
+        //                     $(".misc-pub-section label").append("'.$label.'");
+        //                 });
+        //             </script>
+        //         ';
+        //     }
+        // }
     }
     new ClassroomType;
 }

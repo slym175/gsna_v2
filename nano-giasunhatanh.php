@@ -49,6 +49,13 @@ if(!class_exists('GiaSuNhatAnh')) {
         public function __construct()
         {
 
+            if ( ! class_exists( 'WP_Async_Request' ) ) {
+                require_once GS_PLUGIN_DIR . '/admin/noty/wp-async-request.php';
+            }
+            if ( ! class_exists( 'WP_Background_Process' ) ) {
+                require_once GS_PLUGIN_DIR . '/admin/noty/wp-background-process.php';
+            }
+
             $upload = wp_upload_dir();
             $upload_dir = $upload['basedir'];
             $upload_dir = $upload_dir . '/gsna-dir';
@@ -467,9 +474,10 @@ function wpdocs_run_on_transition_only( $new_status, $old_status, $post ) {
         $classnoty = ClassroomNotyHelper::getInstance();
         $classnoty->setClassroomID($post->ID);
         $invalid_tutors = $classnoty->getTutors();
-        // write_log($invalid_tutors);
+        write_log($invalid_tutors);
 
-        $classnoty = Noty_Sender::getInstance();
+        // $noty = Noty_Sender::getInstance();
+        // $noty->sendMail($post->ID, $invalid_tutors);
     } else {
         return;
     }

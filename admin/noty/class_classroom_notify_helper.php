@@ -42,7 +42,7 @@ if(!class_exists('ClassroomNotyHelper')) {
                     if( !get_the_author_meta( 'user_address', $tutor->ID) || !get_the_author_meta('user_prof_mail_sms_submit', $tutor->ID) ) { continue; }
                     $subs = get_the_author_meta( 'user_prof_subject', $tutor->ID );
 
-                    if( array_filter( $terms, function($term) {
+                    if( array_walk( $terms, function($term, $subs) {
                         if( in_array( $term->term_id, is_array($subs) && isset($subs) ? $subs : array() ) ) {
                             return true;
                         }

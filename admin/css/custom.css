@@ -688,3 +688,29 @@ p.classroom_price {
 .filter-menu-list.d-none {
     display: none
 }
+
+@media only screen and (max-width: 767px) {
+    tr[data-name="user_prof_mail_sms_submit"],
+    tr[data-name="user_prof_certificate"],
+    tr[data-name="user_prof_avatar"] {
+        display: block;
+        width: 100%;
+    }
+
+    tr[data-name="user_prof_mail_sms_submit"] td.acf-label,
+    tr[data-name="user_prof_certificate"] td.acf-label,
+    tr[data-name="user_prof_avatar"] td.acf-label{
+        padding-bottom: 0;
+        border: unset;
+        width: 100%;
+        padding-bottom: 0;
+    }
+ 
+    tr[data-name="user_prof_mail_sms_submit"] td.acf-input,
+    tr[data-name="user_prof_certificate"] td.acf-input,
+    tr[data-name="user_prof_avatar"] td.acf-input {
+        display: block;
+        border: unset;
+        width: 100%;
+    }
+}

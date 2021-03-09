@@ -302,23 +302,23 @@ function view_render_form($post, $callback_args)
             </select>
         </td>
     </tr>
-    <tr class="form-row">
+    <!-- <tr class="form-row">
         <td><label for="class_level">Trình độ</label></td>
         <td>
             <?php 
-                    $levels = array_map(function($item) {
-                        return rtrim(ltrim($item, " "), " ");
-                    }, explode(';', get_option('gs_options')['class_levels']));
+                    // $levels = array_map(function($item) {
+                    //     return rtrim(ltrim($item, " "), " ");
+                    // }, explode(';', get_option('gs_options')['class_levels']));
                     
-                    $lev = is_array(get_post_meta( $post->ID, 'class_level', true )) ? get_post_meta( $post->ID, 'class_level', true ) : array();
+                    // $lev = is_array(get_post_meta( $post->ID, 'class_level', true )) ? get_post_meta( $post->ID, 'class_level', true ) : array();
                 ?>
             <select class="regular-text form-control" name="class_level[]" id="class_level" multiple>
-                <?php foreach($levels as $key => $level) { ?>
-                <option value="<?= $level ?>" <?= in_array($level, $lev) ? "selected" : "" ?>><?= $level ?></option>
-                <?php } ?>
+                <?php // foreach($levels as $key => $level) { ?>
+                <option value="<?php // echo $level ?>" <?php // echo in_array($level, $lev) ? "selected" : "" ?>><?php // echo $level ?></option>
+                <?php // } ?>
             </select>
         </td>
-    </tr>
+    </tr> -->
     <tr class="form-row">
         <td><label for="class_note">Ghi chú</label></td>
         <td><textarea class="regular-text form-control" type="text" rows="4" name="class_note"
@@ -564,21 +564,21 @@ function gs_post_meta_save( $post_id )
     update_post_meta( $post_id, 'class_caphoc', $class_caphoc );
 
     //Level
-    $old_levels = get_post_meta($post_id, 'class_level', true);
-    $new_levels = array();
+    // $old_levels = get_post_meta($post_id, 'class_level', true);
+    // $new_levels = array();
 
-    $levels = isset($_POST['class_level']) ? $_POST['class_level'] : array();
-    $count_levels = count($levels);
+    // $levels = isset($_POST['class_level']) ? $_POST['class_level'] : array();
+    // $count_levels = count($levels);
 
-    for ($i = 0; $i < $count_levels; $i++) {
-        if ($levels[$i] != '') :
-            $new_levels[$i] = stripslashes(strip_tags($levels[$i]));
-        endif;
-    }
-    if (!empty($new_levels) && $new_levels != $old_levels)
-        update_post_meta($post_id, 'class_level', $new_levels);
-    elseif (empty($new_levels) && $old_levels)
-        delete_post_meta($post_id, 'class_level', $old_levels);
+    // for ($i = 0; $i < $count_levels; $i++) {
+    //     if ($levels[$i] != '') :
+    //         $new_levels[$i] = stripslashes(strip_tags($levels[$i]));
+    //     endif;
+    // }
+    // if (!empty($new_levels) && $new_levels != $old_levels)
+    //     update_post_meta($post_id, 'class_level', $new_levels);
+    // elseif (empty($new_levels) && $old_levels)
+    //     delete_post_meta($post_id, 'class_level', $old_levels);
     
     //Note
     if(!isset($_POST['class_note'])) {

@@ -55,7 +55,7 @@ if(!class_exists('GS_Profile')) {
                         </tr>
                         <tr>
                             <th>
-                                <label for="user_train_province"><?php echo __( 'Tỉnh/thành (Địa điểm dạy)', GS_TEXTDOMAIN ); ?></label>
+                                <label for="user_train_province"><?php echo __( 'Tỉnh/thành', GS_TEXTDOMAIN ); ?></label>
                             </th>
                             <td>
                                 <select name="user_train_province" id="user_train_province" class="regular-text" value="<?php echo esc_attr( get_the_author_meta( 'user_train_province', $profileuser->ID ) ); ?>">
@@ -65,7 +65,7 @@ if(!class_exists('GS_Profile')) {
                         </tr>
                         <tr>
                             <th>
-                                <label for="user_train_district"><?php echo __( 'Quận/huyện (Địa điểm dạy)', GS_TEXTDOMAIN ); ?></label>
+                                <label for="user_train_district"><?php echo __( 'Quận/huyện', GS_TEXTDOMAIN ); ?></label>
                             </th>
                             <td>
                                 <select name="user_train_district" id="user_train_district" class="regular-text" value="<?php echo esc_attr( get_the_author_meta( 'user_train_district', $profileuser->ID ) ); ?>">
@@ -102,50 +102,50 @@ if(!class_exists('GS_Profile')) {
                             </td>
                         </tr>
                     </table>
-                    <h2><?php echo __( 'Hồ sơ chuyên môn', GS_TEXTDOMAIN ); ?></h2>
+                    <!-- <h2><?php // echo __( 'Hồ sơ chuyên môn', GS_TEXTDOMAIN ); ?></h2> -->
                     <table class="form-table">
-                        <tr>
+                        <!-- <tr>
                             <th>
                                 <label for="user_prof_role"><?php echo __( 'Bạn đang là ...', GS_TEXTDOMAIN ); ?></label>
                             </th>
                             <td>
                                 <?php 
-                                    $prof_roles = array_map(function($item) {
-                                        return rtrim(ltrim($item, " "), " ");
-                                    }, explode(';', get_option('gs_options')['tutor_roles']));
+                                    // $prof_roles = array_map(function($item) {
+                                    //     return rtrim(ltrim($item, " "), " ");
+                                    // }, explode(';', get_option('gs_options')['tutor_roles']));
                                 ?>
-                                <select name="user_prof_role" id="user_prof_role" class="regular-text" value="<?php echo esc_attr( get_the_author_meta( 'user_prof_role', $profileuser->ID ) ); ?>">
-                                    <?php foreach($prof_roles as $prole) : ?>
-                                        <option value="<?= $prole ?>" <?= $prole == get_the_author_meta( 'user_prof_role', $profileuser->ID ) ? "selected" : "" ?>><?= $prole ?></option>
-                                    <?php endforeach ?>
+                                <select name="user_prof_role" id="user_prof_role" class="regular-text" value="<?php // echo esc_attr( get_the_author_meta( 'user_prof_role', $profileuser->ID ) ); ?>">
+                                    <?php // foreach($prof_roles as $prole) : ?>
+                                        <option value="<?php // echo $prole ?>" <?php // echo $prole == get_the_author_meta( 'user_prof_role', $profileuser->ID ) ? "selected" : "" ?>><?php // echo $prole ?></option>
+                                    <?php // endforeach ?>
                                 </select>
                             </td>
                         </tr>
                         <tr>
                             <th>
-                                <label for="user_prof_format"><?php echo __( 'Hình thức dạy', GS_TEXTDOMAIN ); ?></label>
+                                <label for="user_prof_format"><?php // echo __( 'Hình thức dạy', GS_TEXTDOMAIN ); ?></label>
                             </th>
                             <td>
                                 <?php 
-                                    $prof_formats = array_map(function($item) {
-                                        return rtrim(ltrim($item, " "), " ");
-                                    }, explode(';', get_option('gs_options')['tutor_formats']));
+                                    // $prof_formats = array_map(function($item) {
+                                    //     return rtrim(ltrim($item, " "), " ");
+                                    // }, explode(';', get_option('gs_options')['tutor_formats']));
                                 ?>
-                                <select name="user_prof_format" id="user_prof_format" class="regular-text" value="<?php echo esc_attr( get_the_author_meta( 'user_prof_format', $profileuser->ID ) ); ?>">
-                                    <?php foreach($prof_formats as $pformat) : ?>
-                                        <option value="<?= $pformat ?>" <?= $pformat == get_the_author_meta( 'user_prof_format', $profileuser->ID ) ? "selected" : "" ?>><?= $pformat ?></option>
-                                    <?php endforeach ?>
+                                <select name="user_prof_format" id="user_prof_format" class="regular-text" value="<?php // echo esc_attr( get_the_author_meta( 'user_prof_format', $profileuser->ID ) ); ?>">
+                                    <?php // foreach($prof_formats as $pformat) : ?>
+                                        <option value="<?php // echo $pformat ?>" <?php // echo $pformat == get_the_author_meta( 'user_prof_format', $profileuser->ID ) ? "selected" : "" ?>><?php // echo $pformat ?></option>
+                                    <?php // endforeach ?>
                                 </select>
                             </td>
                         </tr>
                         <tr>
                             <th>
-                                <label for="user_prof_price"><?php echo __( 'Học phí (vnđ/buổi)', GS_TEXTDOMAIN ); ?></label>
+                                <label for="user_prof_price"><?php // echo __( 'Học phí (vnđ/buổi)', GS_TEXTDOMAIN ); ?></label>
                             </th>
                             <td>
-                                <input type="number" name="user_prof_price" id="user_prof_price" value="<?php echo esc_attr( get_the_author_meta( 'user_prof_price', $profileuser->ID ) ); ?>" class="regular-text" />
+                                <input type="number" name="user_prof_price" id="user_prof_price" value="<?php // echo esc_attr( get_the_author_meta( 'user_prof_price', $profileuser->ID ) ); ?>" class="regular-text" />
                             </td>
-                        </tr>
+                        </tr> -->
                         <tr>
                             <th>
                                 <label for="user_prof_subject"><?php echo __( 'Môn học sẽ dạy', GS_TEXTDOMAIN ); ?></label>
@@ -168,56 +168,56 @@ if(!class_exists('GS_Profile')) {
                                 <?php endforeach ?>
                             </td>
                         </tr>
-                        <tr>
+                        <!-- <tr>
                             <th>
-                                <label for="user_prof_classes"><?php echo __( 'Số lớp đã dạy', GS_TEXTDOMAIN ); ?></label>
+                                <label for="user_prof_classes"><?php // echo __( 'Số lớp đã dạy', GS_TEXTDOMAIN ); ?></label>
                             </th>
                             <td>
-                                <input type="number" name="user_prof_classes" id="useuser_prof_classesr_prof_price" value="<?php echo esc_attr( get_the_author_meta( 'user_prof_classes', $profileuser->ID ) ); ?>" class="regular-text" />
+                                <input type="number" name="user_prof_classes" id="useuser_prof_classesr_prof_price" value="<?php // echo esc_attr( get_the_author_meta( 'user_prof_classes', $profileuser->ID ) ); ?>" class="regular-text" />
                             </td>
                         </tr>
                         <tr>
                             <th>
-                                <label for="user_prof_schedule"><?php echo __( 'Thời gian giảng dạy', GS_TEXTDOMAIN ); ?></label>
+                                <label for="user_prof_schedule"><?php // echo __( 'Thời gian giảng dạy', GS_TEXTDOMAIN ); ?></label>
                             </th>
                             <td>
                                 <ul>
                                     <?php 
-                                    $user_prof_schedule = get_the_author_meta( 'user_prof_schedule', $profileuser->ID );
-                                    if(isset($user_prof_schedule) && is_array($user_prof_schedule)){
-                                    foreach($user_prof_schedule as $prof_schedule) {
+                                    // $user_prof_schedule = get_the_author_meta( 'user_prof_schedule', $profileuser->ID );
+                                    // if(isset($user_prof_schedule) && is_array($user_prof_schedule)){
+                                    // foreach($user_prof_schedule as $prof_schedule) {
                                     ?>
-                                        <li><?= $prof_schedule['user_schedule_day']." -- ".$prof_schedule['user_schedule_start']." - ".$prof_schedule['user_schedule_end'] ?></li>
-                                    <?php }}else{ ?>
+                                        <li><?php // echo $prof_schedule['user_schedule_day']." -- ".$prof_schedule['user_schedule_start']." - ".$prof_schedule['user_schedule_end'] ?></li>
+                                    <?php // }}else{ ?>
                                         <p>Gia sư chưa cập nhật thông tin này</p>
-                                    <?php } ?>
+                                    <?php // } ?>
                                 </ul>
                             </td>
-                        </tr>
+                        </tr> -->
                     </table>
                     <h2><?php echo __( 'Ảnh hồ sơ', GS_TEXTDOMAIN ); ?></h2>
                     <table class="form-table">
-                        <tr>
+                        <!-- <tr>
                             <th>
-                                <label for="user_prof_id_card"><?php echo __( 'Ảnh CMT/Căn cước/Hộ chiếu', GS_TEXTDOMAIN ); ?></label>
+                                <label for="user_prof_id_card"><?php // echo __( 'Ảnh CMT/Căn cước/Hộ chiếu', GS_TEXTDOMAIN ); ?></label>
                             </th>
                             <td>
                                 <?php 
-                                    if( get_field( 'user_prof_id_card', 'user_'. $profileuser->ID ) != "") {
-                                        $id_cards = get_field( 'user_prof_id_card', 'user_'. $profileuser->ID );
-                                        foreach($id_cards as $card) {
-                                        ?>
-                                        <img src="<?= $card['url'] ?>" alt="<?= $card['title'] ?>" class="photo" height="96">
-                                        <?php
-                                        }
-                                    }else{
-                                        ?>
-                                            <p>Gia sư chưa cập nhật thông tin này</p>
-                                        <?php
-                                    }
+                                    // if( get_field( 'user_prof_id_card', 'user_'. $profileuser->ID ) != "") {
+                                    //     $id_cards = get_field( 'user_prof_id_card', 'user_'. $profileuser->ID );
+                                    //     foreach($id_cards as $card) {
+                                    //     ?>
+                                    //     <img src="<?php // echo $card['url'] ?>" alt="<?php // echo $card['title'] ?>" class="photo" height="96">
+                                    //     <?php
+                                    //     }
+                                    // }else{
+                                    //     ?>
+                                    //         <p>Gia sư chưa cập nhật thông tin này</p>
+                                    //     <?php
+                                    // }
                                 ?>
                             </td>
-                        </tr>
+                        </tr> -->
                         <tr>
                             <th>
                                 <label for="user_prof_certificate"><?php echo __( 'Thẻ sinh viên/bằng/chứng chỉ', GS_TEXTDOMAIN ); ?></label>
@@ -261,27 +261,27 @@ if(!class_exists('GS_Profile')) {
                             </td>
                         </tr>
                     </table>
-                    <h2><?php echo __( 'Thông tin khác', GS_TEXTDOMAIN ); ?></h2>
-                    <table class="form-table">
+                    <h2><?php// echo __( 'Thông tin khác', GS_TEXTDOMAIN ); ?></h2>
+                    <!-- <table class="form-table">
                         <tr>
                             <th>
-                                <label for="user_prof_intro_video"><?php echo __( 'Video giới thiệu', GS_TEXTDOMAIN ); ?></label>
+                                <label for="user_prof_intro_video"><?php // echo __( 'Video giới thiệu', GS_TEXTDOMAIN ); ?></label>
                             </th>
                             <td>
                                 <?php 
-                                    if(get_the_author_meta( 'user_prof_intro_video', $profileuser->ID ) != "") {
-                                        ?>
-                                        <iframe width="560" height="315" src="<?php echo esc_attr( get_the_author_meta( 'user_prof_intro_video', $profileuser->ID ) ); ?>" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                                        <?php
-                                    }else{
-                                        ?>
-                                            <p>Gia sư chưa cập nhật thông tin này</p>
-                                        <?php
-                                    }
+                                    // if(get_the_author_meta( 'user_prof_intro_video', $profileuser->ID ) != "") {
+                                    //     ?>
+                                    //     <iframe width="560" height="315" src="<?php // echo esc_attr( get_the_author_meta( 'user_prof_intro_video', $profileuser->ID ) ); ?>" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                    //     <?php
+                                    // }else{
+                                    //     ?>
+                                    //         <p>Gia sư chưa cập nhật thông tin này</p>
+                                    //     <?php
+                                    // }
                                 ?>
                             </td>
                         </tr>
-                    </table>
+                    </table> -->
             <?php }} else {
             ?>
                 <h2><?php echo __( 'Thông tin cá nhân', GS_TEXTDOMAIN ); ?></h2>
@@ -302,13 +302,13 @@ if(!class_exists('GS_Profile')) {
                     <input type="date" name="user_birth" id="user_birth" value="<?php echo esc_attr( get_the_author_meta( 'user_birth', $profileuser->ID ) ); ?>" class="regular-text" required />
                 </p>
                 <p class="form-user_train_province">
-                    <label for="user_train_province"><?php echo __( 'Tỉnh/thành (Địa điểm dạy)', GS_TEXTDOMAIN ); ?></label>
+                    <label for="user_train_province"><?php echo __( 'Tỉnh/thành', GS_TEXTDOMAIN ); ?></label>
                     <select name="user_train_province" id="user_train_province" class="regular-text" value="<?php echo esc_attr( get_the_author_meta( 'user_train_province', $profileuser->ID ) ); ?>">
                                 
                     </select>
                 </p>
                 <p class="form-user_train_district">
-                    <label for="user_train_district"><?php echo __( 'Quận/huyện (Địa điểm dạy)', GS_TEXTDOMAIN ); ?></label>
+                    <label for="user_train_district"><?php echo __( 'Quận/huyện', GS_TEXTDOMAIN ); ?></label>
                     <select name="user_train_district" id="user_train_district" class="regular-text" value="<?php echo esc_attr( get_the_author_meta( 'user_train_district', $profileuser->ID ) ); ?>">
                                 
                     </select>
@@ -316,48 +316,48 @@ if(!class_exists('GS_Profile')) {
                 <p class="form-user_address">
                     <label for="user_address"><?php echo __( 'Địa chỉ hiện tại', GS_TEXTDOMAIN ); ?></label>
                     <textarea type="text" rows="5" name="user_address" id="user_address" class="regular-text" ><?php echo esc_attr( get_the_author_meta( 'user_address', $profileuser->ID ) ); ?></textarea>
-                    <p>số nhà, ngách A, ngõ B, thôn C, xã D</p>
+                    <p>gia sư ghi rõ: số nhà, ngõ ngách, phường(xã) ( để định vị lớp gần bạn cho chính xác )</p>
                 </p>
                 <h2><?php echo __( 'Thông tin gia sư', GS_TEXTDOMAIN ); ?></h2>
                 <p>
-                    <label for="user_tutor_exp"><?php echo __( 'Kinh nghiệm đi gia sư và giảng dạy ( chi tiết )', GS_TEXTDOMAIN ); ?></label>
+                    <label for="user_tutor_exp"><?php echo __( 'Gia sư trường nào ? Kinh Nghiệm ra sao ? ( chi tiết )', GS_TEXTDOMAIN ); ?></label>
                     <textarea type="text" rows="5" name="user_tutor_exp" id="user_tutor_exp" class="regular-text" ><?php echo esc_attr( get_the_author_meta( 'user_tutor_exp', $profileuser->ID ) ); ?></textarea>
                 </p>
                 <p>
                     <label for="user_tutor_awards"><?php echo __( 'Thành tích học tập và dạy học ( chi tiết )', GS_TEXTDOMAIN ); ?></label>
                     <textarea type="text" rows="5" name="user_tutor_awards" id="user_tutor_awards" class="regular-text" ><?php echo esc_attr( get_the_author_meta( 'user_tutor_awards', $profileuser->ID ) ); ?></textarea>
                 </p>
-                <h2><?php echo __( 'Hồ sơ chuyên môn', GS_TEXTDOMAIN ); ?></h2>
-                <p>
-                    <label for="user_prof_role"><?php echo __( 'Bạn đang là ...', GS_TEXTDOMAIN ); ?></label>
+                <!-- <h2><?php // echo __( 'Hồ sơ chuyên môn', GS_TEXTDOMAIN ); ?></h2> -->
+                <!-- <p>
+                    <label for="user_prof_role"><?php // echo __( 'Bạn đang là ...', GS_TEXTDOMAIN ); ?></label>
                     <?php 
-                        $prof_roles = array_map(function($item) {
-                            return rtrim(ltrim($item, " "), " ");
-                        }, explode(';', get_option('gs_options')['tutor_roles']));
+                        // $prof_roles = array_map(function($item) {
+                        //     return rtrim(ltrim($item, " "), " ");
+                        // }, explode(';', get_option('gs_options')['tutor_roles']));
                     ?>
                     <select name="user_prof_role" id="user_prof_role" class="regular-text" value="<?php echo esc_attr( get_the_author_meta( 'user_prof_role', $profileuser->ID ) ); ?>">
-                        <?php foreach($prof_roles as $prole) : ?>
-                            <option value="<?= $prole ?>" <?= $prole == get_the_author_meta( 'user_prof_role', $profileuser->ID ) ? "selected" : "" ?>><?= $prole ?></option>
-                        <?php endforeach ?>
+                        <?php // foreach($prof_roles as $prole) : ?>
+                            <option value="<?php // $prole ?>" <?php // $prole == get_the_author_meta( 'user_prof_role', $profileuser->ID ) ? "selected" : "" ?>><?= $prole ?></option>
+                        <?php // endforeach ?>
                     </select>
                 </p>
                 <p>
-                    <label for="user_prof_format"><?php echo __( 'Hình thức dạy', GS_TEXTDOMAIN ); ?></label>
+                    <label for="user_prof_format"><?php // echo __( 'Hình thức dạy', GS_TEXTDOMAIN ); ?></label>
                     <?php 
-                        $prof_formats = array_map(function($item) {
-                            return rtrim(ltrim($item, " "), " ");
-                        }, explode(';', get_option('gs_options')['tutor_formats']));
+                        // $prof_formats = array_map(function($item) {
+                        //     return rtrim(ltrim($item, " "), " ");
+                        // }, explode(';', get_option('gs_options')['tutor_formats']));
                     ?>
-                    <select name="user_prof_format" id="user_prof_format" class="regular-text" value="<?php echo esc_attr( get_the_author_meta( 'user_prof_format', $profileuser->ID ) ); ?>">
-                        <?php foreach($prof_formats as $pformat) : ?>
-                            <option value="<?= $pformat ?>" <?= $pformat == get_the_author_meta( 'user_prof_format', $profileuser->ID ) ? "selected" : "" ?>><?= $pformat ?></option>
-                        <?php endforeach ?>
+                    <select name="user_prof_format" id="user_prof_format" class="regular-text" value="<?php // echo esc_attr( get_the_author_meta( 'user_prof_format', $profileuser->ID ) ); ?>">
+                        <?php // foreach($prof_formats as $pformat) : ?>
+                            <option value="<?php // echo $pformat ?>" <?php // $pformat == get_the_author_meta( 'user_prof_format', $profileuser->ID ) ? "selected" : "" ?>><?php // echo $pformat ?></option>
+                        <?php // endforeach ?>
                     </select>
                 </p>
                 <p>
-                    <label for="user_prof_price"><?php echo __( 'Học phí (vnđ/buổi)', GS_TEXTDOMAIN ); ?></label>
-                    <input type="number" name="user_prof_price" id="user_prof_price" value="<?php echo esc_attr( get_the_author_meta( 'user_prof_price', $profileuser->ID ) ); ?>" class="regular-text" />
-                </p>
+                    <label for="user_prof_price"><?php // echo __( 'Học phí (vnđ/buổi)', GS_TEXTDOMAIN ); ?></label>
+                    <input type="number" name="user_prof_price" id="user_prof_price" value="<?php // echo esc_attr( get_the_author_meta( 'user_prof_price', $profileuser->ID ) ); ?>" class="regular-text" />
+                </p> -->
                 <p>
                     <label for="user_prof_subject"><?php echo __( 'Môn học sẽ dạy', GS_TEXTDOMAIN ); ?></label>
                     <?php 
@@ -370,17 +370,17 @@ if(!class_exists('GS_Profile')) {
                     ?>
                     <?php foreach($terms as $key => $term) : ?>
                         <span class="subjects-checkbox">
-                            <input <?= in_array($term->term_id, is_array($subs) ? $subs : array()) ? "checked" : "" ?> type="checkbox" name="user_prof_subject[]" id="user_prof_subject<?= $term->term_id ?>" value="<?= $term->term_id ?>">
-                            <label for="user_prof_subject<?= $term->term_id ?>"><?= $term->name ?></label>
+                            <input <?= in_array($term->term_id, is_array($subs) ? $subs : array()) ? "checked" : "" ?> type="checkbox" name="user_prof_subject[]" id="user_prof_subject<?php echo $term->term_id ?>" value="<?php echo $term->term_id ?>">
+                            <label for="user_prof_subject<?php echo $term->term_id ?>"><?php echo $term->name ?></label>
                         </span>
                     <?php endforeach ?>
                 </p>
-                <p>
-                    <label for="user_prof_classes"><?php echo __( 'Số lớp đã dạy', GS_TEXTDOMAIN ); ?></label>
-                    <input type="number" name="user_prof_classes" id="useuser_prof_classesr_prof_price" value="<?php echo esc_attr( get_the_author_meta( 'user_prof_classes', $profileuser->ID ) ); ?>" class="regular-text" />
+                <!-- <p>
+                    <label for="user_prof_classes"><?php // echo __( 'Số lớp đã dạy', GS_TEXTDOMAIN ); ?></label>
+                    <input type="number" name="user_prof_classes" id="useuser_prof_classesr_prof_price" value="<?php // echo esc_attr( get_the_author_meta( 'user_prof_classes', $profileuser->ID ) ); ?>" class="regular-text" />
                 </p>
                 <p>
-                    <label for="user_prof_schedule"><?php echo __( 'Thời gian giảng dạy', GS_TEXTDOMAIN ); ?></label>
+                    <label for="user_prof_schedule"><?php // echo __( 'Thời gian giảng dạy', GS_TEXTDOMAIN ); ?></label>
                     <table id="class_schedule_table">
                         <thead>
                             <tr>
@@ -393,44 +393,44 @@ if(!class_exists('GS_Profile')) {
                         </thead>
                         
                         <?php 
-                            $repeatable_fields = get_the_author_meta('user_prof_schedule', $profileuser->ID);
-                            wp_nonce_field('hhs_repeatable_meta_box_nonce', 'hhs_repeatable_meta_box_nonce'); 
-                            $days_of_week = array('Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ nhật');
+                            // $repeatable_fields = get_the_author_meta('user_prof_schedule', $profileuser->ID);
+                            // wp_nonce_field('hhs_repeatable_meta_box_nonce', 'hhs_repeatable_meta_box_nonce'); 
+                            // $days_of_week = array('Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ nhật');
                         ?>
-                        <?php if ($repeatable_fields) :
-                            foreach ($repeatable_fields as $field) : ?>
+                        <?php //if ($repeatable_fields) :
+                            //foreach ($repeatable_fields as $field) : ?>
                                 <tr class="form-row">
                                     <td>
                                         <a href="javascript:void(0)" onclick="insertRepeaterRow(this)"><i class="dashicons-before dashicons-insert"></i></a>
                                     </td>
                                     <td class="width: 50%">
-                                        <select class="regular-text form-control class_schedule_day" name="user_schedule_day[]" value="<?php echo $field['user_schedule_day'] ?>">
-                                            <?php foreach($days_of_week as $key => $day) : ?>
-                                                <option value="<?= $day ?>"<?= $day == $field['user_schedule_day'] ? "selected" : ""?>><?= $day ?></option>
-                                            <?php endforeach ?>
+                                        <select class="regular-text form-control class_schedule_day" name="user_schedule_day[]" value="<?php // echo $field['user_schedule_day'] ?>">
+                                            <?php //foreach($days_of_week as $key => $day) : ?>
+                                                <option value="<?php // echo $day ?>"<?php // echo $day == $field['user_schedule_day'] ? "selected" : ""?>><?php // echo $day ?></option>
+                                            <?php //endforeach ?>
                                         </select>
                                     </td>
                                     <td>
-                                        <input class="regular-text form-control class_schedule_start" type="time" name="user_schedule_start[]" value="<?php echo $field['user_schedule_start'] ?>">
+                                        <input class="regular-text form-control class_schedule_start" type="time" name="user_schedule_start[]" value="<?php // echo $field['user_schedule_start'] ?>">
                                     </td>
                                     <td>
-                                        <input class="regular-text form-control class_schedule_end" type="time" name="user_schedule_end[]" value="<?php echo $field['user_schedule_end'] ?>">
+                                        <input class="regular-text form-control class_schedule_end" type="time" name="user_schedule_end[]" value="<?php // echo $field['user_schedule_end'] ?>">
                                     </td>
                                     <td>
                                         <a href="javascript:void(0)" onclick="removeRepeaterRow(this)"><i class="dashicons-before dashicons-dismiss"></i></a>
                                     </td>
                                 </tr>
-                            <?php endforeach ?>
-                        <?php else : ?>
+                            <?php // endforeach ?>
+                        <?php // else : ?>
                             <tr class="form-row">
                                 <td>
                                     <a href="javascript:void(0)" onclick="insertRepeaterRow(this)"><i class="dashicons-before dashicons-insert"></i></a>
                                 </td>
                                 <td class="width: 50%">
                                     <select class="regular-text form-control class_schedule_day" name="user_schedule_day[]">
-                                        <?php foreach($days_of_week as $key => $day) : ?>
-                                            <option value="<?= $day ?>"><?= $day ?></option>
-                                        <?php endforeach ?>
+                                        <?php //foreach($days_of_week as $key => $day) : ?>
+                                            <option value="<?php // $day ?>"><?php // $day ?></option>
+                                        <?php //endforeach ?>
                                     </select>
                                 </td>
                                 <td>
@@ -443,20 +443,20 @@ if(!class_exists('GS_Profile')) {
                                     <a href="javascript:void(0)" onclick="removeRepeaterRow(this)"><i class="dashicons-before dashicons-dismiss"></i></a>
                                 </td>
                             </tr>
-                        <?php endif ?>
+                        <?php // endif ?>
                     </table>
-                </p>
+                </p> -->
                 
-                <h2><?php echo __( 'Thông tin khác', GS_TEXTDOMAIN ); ?></h2>
+                <!-- <h2><?php // echo __( 'Thông tin khác', GS_TEXTDOMAIN ); ?></h2>
                 <p>
-                    <label for="user_prof_intro_video"><?php echo __( 'Video giới thiệu', GS_TEXTDOMAIN ); ?></label>
-                    <input type="text" name="user_prof_intro_video" id="user_prof_intro_video" value="<?php echo esc_attr( get_the_author_meta( 'user_prof_intro_video', $profileuser->ID ) ); ?>" class="regular-text" />
-                    <?php if(get_the_author_meta( 'user_prof_intro_video', $profileuser->ID ) != "") { ?>
-                        <iframe width="560" height="315" src="<?php echo esc_attr( get_the_author_meta( 'user_prof_intro_video', $profileuser->ID ) ); ?>" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                    <?php }else{ ?>
+                    <label for="user_prof_intro_video"><?php // echo __( 'Video giới thiệu', GS_TEXTDOMAIN ); ?></label>
+                    <input type="text" name="user_prof_intro_video" id="user_prof_intro_video" value="<?php // echo esc_attr( get_the_author_meta( 'user_prof_intro_video', $profileuser->ID ) ); ?>" class="regular-text" />
+                    <?php //if(get_the_author_meta( 'user_prof_intro_video', $profileuser->ID ) != "") { ?>
+                        <iframe width="560" height="315" src="<?php // echo esc_attr( get_the_author_meta( 'user_prof_intro_video', $profileuser->ID ) ); ?>" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <?php //}else{ ?>
                         <p>Gia sư chưa cập nhật thông tin này</p>
-                    <?php } ?>
-                </p>
+                    <?php //} ?>
+                </p> -->
             <?php
         }}
 
@@ -476,39 +476,39 @@ if(!class_exists('GS_Profile')) {
             update_user_meta($userId, 'user_tutor_exp', $_REQUEST['user_tutor_exp']);
             update_user_meta($userId, 'user_tutor_awards', $_REQUEST['user_tutor_awards']);
 
-            update_user_meta($userId, 'user_prof_role', $_REQUEST['user_prof_role']);
-            update_user_meta($userId, 'user_prof_format', $_REQUEST['user_prof_format']);
-            update_user_meta($userId, 'user_prof_price', $_REQUEST['user_prof_price']);
+            // update_user_meta($userId, 'user_prof_role', $_REQUEST['user_prof_role']);
+            // update_user_meta($userId, 'user_prof_format', $_REQUEST['user_prof_format']);
+            // update_user_meta($userId, 'user_prof_price', $_REQUEST['user_prof_price']);
             update_user_meta($userId, 'user_prof_subject', $_REQUEST['user_prof_subject']);
-            update_user_meta($userId, 'user_prof_classes', $_REQUEST['user_prof_classes']);
-            update_user_meta($userId, 'user_prof_schedule', $_REQUEST['user_prof_schedule']);
+            // update_user_meta($userId, 'user_prof_classes', $_REQUEST['user_prof_classes']);
+            // update_user_meta($userId, 'user_prof_schedule', $_REQUEST['user_prof_schedule']);
 
-            $old = get_the_author_meta( 'user_prof_schedule', $post_id );
-            $new = array();
+            // $old = get_the_author_meta( 'user_prof_schedule', $post_id );
+            // $new = array();
 
-            $schedule = isset($_POST['user_schedule_day']) ? $_POST['user_schedule_day'] : "";
-            $start_date = isset($_POST['user_schedule_start']) ? $_POST['user_schedule_start'] : "";
-            $end_date = isset($_POST['user_schedule_end']) ? $_POST['user_schedule_end'] : "";
+            // $schedule = isset($_POST['user_schedule_day']) ? $_POST['user_schedule_day'] : "";
+            // $start_date = isset($_POST['user_schedule_start']) ? $_POST['user_schedule_start'] : "";
+            // $end_date = isset($_POST['user_schedule_end']) ? $_POST['user_schedule_end'] : "";
 
-            $count = count($schedule);
+            // $count = count($schedule);
 
-            for ($i = 0; $i < $count; $i++) {
-                if ($schedule[$i] != '') :
-                    $new[$i]['user_schedule_day'] = stripslashes(strip_tags($schedule[$i]));
-                    $new[$i]['user_schedule_start'] = stripslashes(strip_tags($start_date[$i]));
-                    $new[$i]['user_schedule_end'] = stripslashes(strip_tags($end_date[$i]));
-                endif;
-            }
+            // for ($i = 0; $i < $count; $i++) {
+            //     if ($schedule[$i] != '') :
+            //         $new[$i]['user_schedule_day'] = stripslashes(strip_tags($schedule[$i]));
+            //         $new[$i]['user_schedule_start'] = stripslashes(strip_tags($start_date[$i]));
+            //         $new[$i]['user_schedule_end'] = stripslashes(strip_tags($end_date[$i]));
+            //     endif;
+            // }
 
-            if (!empty($new) && $new != $old)
-                update_user_meta($userId, 'user_prof_schedule', $new);
-            elseif (empty($new) && $old)
-                delete_user_meta($userId, 'user_prof_schedule', $old);
+            // if (!empty($new) && $new != $old)
+            //     update_user_meta($userId, 'user_prof_schedule', $new);
+            // elseif (empty($new) && $old)
+            //     delete_user_meta($userId, 'user_prof_schedule', $old);
 
 
             // add_filter( 'avatar_defaults', array($this, 'wpb_new_gravatar'));
 
-            update_user_meta($userId, 'user_prof_intro_video', $_REQUEST['user_prof_intro_video']);
+            // update_user_meta($userId, 'user_prof_intro_video', $_REQUEST['user_prof_intro_video']);
         }
 
         public static function create_shortcode_profile_view() {

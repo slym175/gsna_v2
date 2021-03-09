@@ -34,17 +34,26 @@ if(!class_exists('ClassroomNotyHelper')) {
             $tutors = get_users( $args );
             $class_point = getCoordinates(getAddress($this->classroom_id, 'classroom'));
             
+            $terms = get_the_terms( $this->classroom_id, 'class_subject' );
+            
             if($tutors && is_array($tutors)) {
                 foreach ( $tutors as $key => $tutor ) {
                     // kiểm tra địa chỉ của gia sư và bật/tắt thông báo
                     if( !get_the_author_meta( 'user_address', $tutor->ID) || !get_the_author_meta('user_prof_mail_sms_submit', $tutor->ID) ) { continue; }
-                    
-                    // kiểm tra địa chỉ của gia sư và bật/tắt thông báo
-                    $tutor_point = get_the_author_meta( 'user_coordinates', $tutor->ID );
+                    $subs = get_the_author_meta( 'user_prof_subject', $tutor->ID );
 
-                    $distance    = $this->distanceBetween2Points( $class_point, $tutor_point );
-                    if($distance > $this->max_distance) { continue; }
-                    $invalid_tutors[$tutor->ID] = $tutor->user_email;  
+                    if( array_filter( $terms, function($term) {
+                        if( in_array( $term->term_id, is_array($subs) && isset($subs) ? $subs : array() ) ) {
+                            return true;
+                        }
+                        return false;
+                    } ) ) {
+                        $tutor_point = get_the_author_meta( 'user_coordinates', $tutor->ID );
+                        if($tutor_point) { continue; }
+                        $distance    = $this->distanceBetween2Points( $class_point, $tutor_point );
+                        if($distance > $this->max_distance) { continue; }
+                        $invalid_tutors[$tutor->ID] = $tutor->user_email;
+                    }
                 }
             }
 
@@ -63,6 +72,7 @@ if(!class_exists('ClassroomNotyHelper')) {
         }
 
         private function distanceBetween2Points($point1, $point2) {
+            if( $point1 == null || $point2 == null ) return 0;
             $pi80 = M_PI / 180;
             $lat1 = floatval(explode(',', $point1)[1]) * $pi80;
             $lng1 = floatval(explode(',', $point1)[0]) * $pi80;

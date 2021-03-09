@@ -32,14 +32,14 @@ if(!class_exists('Noty_Sender')) {
             }
 
             $result = false;
-            $to = 'thuyhu9876@gmail.com';
+            $to = get_option( 'admin_email' ) ? get_option( 'admin_email' ) : 'thuyhu9876@gmail.com';
             $classroom_id = isset($arguments[0]) ? $arguments[0] : 0; 
             $subject = get_option('gs_options')['classroom_publish_noty_mail_subject'] ? get_option('gs_options')['classroom_publish_noty_mail_subject'] : 'GỬI TỪ GIA SƯ NHẬT ANH';
-            $headers = array('Content-Type: text/html; charset=UTF-8');
+            $headers = array(
+                'Content-Type: text/html; charset=UTF-8',
+                'Bcc: '. isset($arguments[1]) ? (is_array($arguments[1]) ? implode(',', $arguments[1]) : $arguments[1]) : $to
+            );
             $message = $this->generateMessage(get_option('gs_options')['classroom_publish_noty_mail'] ? get_option('gs_options')['classroom_publish_noty_mail'] : 'Có lớp mới được đăng tải. Ghé thăm ' . get_bloginfo('url') . ' để tìm hiểu thêm.', $classroom_id);
-            if(is_array($arguments) && $arguments) {
-                $to = isset($arguments[1]) ? (is_array($arguments[1]) ? implode(',', $arguments[1]) : $arguments[1]) : $to;
-            }
 
             $mailResult = wp_mail( $to, $subject, $message, $headers );
 
@@ -77,6 +77,7 @@ if(!class_exists('Noty_Sender')) {
         private function generateMessage($message, $id)
         {
             $data = array(
+                'class_ID'          => get_post_meta( $id, 'class_ID', true ),
                 'class_name'        => get_the_title( $id ),
                 'class_address'     => get_post_meta( $id, 'class_address', true ),
                 'site_name'         => get_bloginfo('name'), 

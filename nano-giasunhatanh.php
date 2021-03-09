@@ -327,9 +327,9 @@ function my_acf_ungallery_button() { ?>
     <script>
         (function($) {
             window.addEventListener('DOMContentLoaded', function(){
-                $('.acf-field-gallery[data-name="user_prof_id_card"] a.acf-gallery-add').text('Thêm ảnh');
+                // $('.acf-field-gallery[data-name="user_prof_id_card"] a.acf-gallery-add').text('Thêm ảnh');
                 $('.acf-field-gallery[data-name="user_prof_certificate"] a.acf-gallery-add').text('Thêm ảnh');
-                $('.acf-field-gallery[data-name="user_prof_id_card"] a.acf-gallery-add').text('Thêm ảnh');
+                //$('.acf-field-gallery[data-name="user_prof_id_card"] a.acf-gallery-add').text('Thêm ảnh');
             });
         })(jQuery);
     </script>
@@ -478,9 +478,10 @@ function wpdocs_run_on_transition_only( $new_status, $old_status, $post ) {
         $classnoty->setClassroomID($post->ID);
         $invalid_tutors = $classnoty->getTutors();
         write_log($invalid_tutors);
-
+        
         $noty = Noty_Sender::getInstance();
         $noty->sendMail($post->ID, $invalid_tutors);
+
     } else {
         return;
     }

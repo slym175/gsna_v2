@@ -156,26 +156,26 @@ if(!class_exists("GsSettingsPage")) {
                 ) // Callback Arguments          
             );
 
-            add_settings_field(
-                'class_levels', // ID
-                'Trình độ', // Title 
-                array( $this, 'gs_render_settings_field' ), // Callback
-                'gs-settings', // Page
-                'gs_setting_section', // Section 
-                array (
-                    'parent'        => 'gs_options', // Option name
-                    'id'            => 'class_levels', // Field ID
-                    'class'         => 'regular-text one-line', // Field ID
-                    'type'          => 'textarea', // Field Type
-                    'subtype'       => 'text', // Field Subtype
-                    'name'          => 'class_levels', // Field Name
-                    'description'   => __('Mỗi trình độ viết cách nhau 1 dấu ";"', GS_TEXTDOMAIN),
-                    'options'       => array(
-                        'required'  => true,
-                        'rows'      => 5
-                    )
-                ) // Callback Arguments          
-            );
+            // add_settings_field(
+            //     'class_levels', // ID
+            //     'Trình độ', // Title 
+            //     array( $this, 'gs_render_settings_field' ), // Callback
+            //     'gs-settings', // Page
+            //     'gs_setting_section', // Section 
+            //     array (
+            //         'parent'        => 'gs_options', // Option name
+            //         'id'            => 'class_levels', // Field ID
+            //         'class'         => 'regular-text one-line', // Field ID
+            //         'type'          => 'textarea', // Field Type
+            //         'subtype'       => 'text', // Field Subtype
+            //         'name'          => 'class_levels', // Field Name
+            //         'description'   => __('Mỗi trình độ viết cách nhau 1 dấu ";"', GS_TEXTDOMAIN),
+            //         'options'       => array(
+            //             'required'  => true,
+            //             'rows'      => 5
+            //         )
+            //     ) // Callback Arguments          
+            // );
 
             add_settings_field(
                 'class_caphoc', // ID
@@ -323,7 +323,7 @@ if(!class_exists("GsSettingsPage")) {
                     'type'          => 'textarea', // Field Type
                     'subtype'       => 'text', // Field Subtype
                     'name'          => 'classroom_publish_noty_sms', // Field Name
-                    'description'   => __('Nội dung tin nhắn có thể dùng các thông tin động như: {class_name}, {class_address}, {site_url}, {site_name}', GS_TEXTDOMAIN),
+                    'description'   => __('Nội dung tin nhắn có thể dùng các thông tin động như: {class_ID}, {class_name}, {class_address}, {site_url}, {site_name}', GS_TEXTDOMAIN),
                     'options'       => array(
                         // 'required'  => true,
                         'rows'      => 5
@@ -365,7 +365,7 @@ if(!class_exists("GsSettingsPage")) {
                     'type'          => 'textarea_html', // Field Type
                     'subtype'       => 'text', // Field Subtype
                     'name'          => 'classroom_publish_noty_mail', // Field Name
-                    'description'   => __('Nội dung mail có thể dùng các thông tin động như: {class_name}, {class_address}, {site_url}, {site_name}', GS_TEXTDOMAIN),
+                    'description'   => __('Nội dung mail có thể dùng các thông tin động như: {class_ID}, {class_name}, {class_address}, {site_url}, {site_name}', GS_TEXTDOMAIN),
                     'options'       => array(
                         // 'required'  => true,
                         'rows'      => 5
